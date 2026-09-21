@@ -17,7 +17,7 @@
 // ============================================================
 
 import * as hmUI from '@zos/ui'
-import { Time, HeartRate, Step, Battery } from '@zos/sensor'
+import { Time } from '@zos/sensor'
 import { getLanguage } from '@zos/settings'
 
 import moonData from './moon_data.js'
@@ -39,6 +39,10 @@ const WHITE = 0xFFFFFF
 const GOLD = 0xD4AF37
 
 const DARK_GOLD = 0x704F08
+
+const NEON_CYAN = 0x00E5FF
+
+const DARK_CYAN = 0x005A6E
 
 
 // ============================================================
@@ -282,6 +286,27 @@ function getLabels() {
 }
 
 
+function getPhaseLabel(phaseName) {
+
+  if (!isSpanish()) {
+    return phaseName
+  }
+
+  const phaseLabels = {
+    'New Moon': 'Luna nueva',
+    'Waxing Crescent': 'Creciente',
+    'First Quarter': 'Cuarto creciente',
+    'Waxing Gibbous': 'Gibosa creciente',
+    'Full Moon': 'Luna llena',
+    'Waning Gibbous': 'Gibosa menguante',
+    'Last Quarter': 'Cuarto menguante',
+    'Waning Crescent': 'Menguante'
+  }
+
+  return phaseLabels[phaseName] || phaseName
+}
+
+
 // ============================================================
 // TEXTO GRUESO
 //
@@ -473,6 +498,111 @@ function createGoldText(options) {
 }
 
 
+const SENSOR_NUMBER_IMAGES = [
+
+  'numbers/0.png',
+  'numbers/1.png',
+  'numbers/2.png',
+  'numbers/3.png',
+  'numbers/4.png',
+  'numbers/5.png',
+  'numbers/6.png',
+  'numbers/7.png',
+  'numbers/8.png',
+  'numbers/9.png'
+]
+
+
+const SENSOR_LIMITS = {
+
+  heart: 999,
+
+  steps: 99999,
+
+  battery: 100
+}
+
+
+function createSensorText(options) {
+
+  return hmUI.createWidget(
+    hmUI.widget.TEXT_IMG,
+    {
+      x: options.x,
+      y: options.y,
+      w: options.w,
+      h: options.h,
+      type: options.type,
+      font_array: SENSOR_NUMBER_IMAGES,
+      h_space: 0,
+      align_h: hmUI.align.CENTER_H,
+      invalid_image: 'numbers/null.png',
+      max_value: options.maxValue
+    }
+  )
+}
+
+
+function createSensorIcon(options) {
+
+  return hmUI.createWidget(
+    hmUI.widget.IMG,
+    {
+      x: options.x,
+      y: options.y,
+      w: 36,
+      h: 28,
+      src: 'icons/' + options.name + '.png'
+    }
+  )
+}
+
+
+function createDigitalDigit(options) {
+
+  return hmUI.createWidget(
+    hmUI.widget.IMG,
+    {
+      x: options.x,
+      y: options.y,
+      w: options.w,
+      h: options.h,
+      src:
+        options.path +
+        '/' +
+        options.digit +
+        '.png'
+    }
+  )
+}
+
+
+function createNeonText(options) {
+
+  createBoldText({
+    x: options.x + 2,
+    y: options.y + 2,
+    w: options.w,
+    h: options.h,
+    text: options.text,
+    textSize: options.textSize,
+    color: DARK_CYAN,
+    align: options.align
+  })
+
+  return createBoldText({
+    x: options.x,
+    y: options.y,
+    w: options.w,
+    h: options.h,
+    text: options.text,
+    textSize: options.textSize,
+    color: NEON_CYAN,
+    align: options.align
+  })
+}
+
+
 // ============================================================
 // ESTRELLAS
 // ============================================================
@@ -593,7 +723,7 @@ function updateStars(stars) {
 // INICIO
 // ============================================================
 
-Page({
+WatchFace({
 
   // ==========================================================
   // VARIABLES
@@ -627,6 +757,30 @@ Page({
     console.log(
       'SaganMoon: iniciando watchface'
     )
+
+    if (typeof hmSensor !== 'undefined') {
+
+      this.heartRateSensor =
+        hmSensor.createSensor(
+          hmSensor.id.HEART
+        )
+
+      this.stepSensor =
+        hmSensor.createSensor(
+          hmSensor.id.STEP
+        )
+
+      this.batterySensor =
+        hmSensor.createSensor(
+          hmSensor.id.BATTERY
+        )
+
+    } else {
+
+      console.log(
+        'SaganMoon: hmSensor no disponible'
+      )
+    }
   },
 
 
@@ -640,72 +794,19 @@ Page({
       'SaganMoon: construyendo SaganMoon'
     )
 
-    try {
-
-      this.heartRateSensor = new HeartRate()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO FRECUENCIA = ' +
-        error
-      )
-    }
-
-    try {
-
-      this.stepSensor = new Step()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO PASOS = ' +
-        error
-      )
-    }
-
-    try {
-
-      this.batterySensor = new Battery()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO BATERIA = ' +
-        error
-      )
-    }
-
-
-    // ========================================================
-    // FONDO
-    // ========================================================
-
     hmUI.createWidget(
       hmUI.widget.FILL_RECT,
       {
         x: 0,
         y: 0,
-
-        w:
-          SCREEN_WIDTH,
-
-        h:
-          SCREEN_HEIGHT,
-
-        color:
-          BLACK
+        w: SCREEN_WIDTH,
+        h: SCREEN_HEIGHT,
+        color: BLACK
       }
     )
 
-
-    // ========================================================
-    // ESTRELLAS
-    // ========================================================
-
     this.starWidgets =
       createStars()
-
 
     // ========================================================
     // HORA
@@ -713,7 +814,6 @@ Page({
 
     const time =
       new Time()
-
 
     const year =
       time.getFullYear()
@@ -750,28 +850,22 @@ Page({
     // Se conserva exactamente el tamaño de la versión 1.3.
     // ========================================================
 
-    createBoldText({
-
-      x: 10,
-
+    createDigitalDigit({
+      x: 18,
       y: 112,
+      w: 68,
+      h: 92,
+      path: 'digits/clock',
+      digit: currentHour[0]
+    })
 
-      w: 195,
-
-      h: 115,
-
-      text:
-        currentHour,
-
-      textSize:
-        105,
-
-      color:
-        WHITE,
-
-      align:
-        hmUI.align.CENTER_H
-
+    createDigitalDigit({
+      x: 96,
+      y: 112,
+      w: 68,
+      h: 92,
+      path: 'digits/clock',
+      digit: currentHour[1]
     })
 
 
@@ -781,28 +875,22 @@ Page({
     // BLANCO / GRUESO
     // ========================================================
 
-    createBoldText({
+    createDigitalDigit({
+      x: 18,
+      y: 210,
+      w: 68,
+      h: 92,
+      path: 'digits/clock',
+      digit: currentMinute[0]
+    })
 
-      x: 10,
-
-      y: 214,
-
-      w: 195,
-
-      h: 110,
-
-      text:
-        currentMinute,
-
-      textSize:
-        96,
-
-      color:
-        WHITE,
-
-      align:
-        hmUI.align.CENTER_H
-
+    createDigitalDigit({
+      x: 96,
+      y: 210,
+      w: 68,
+      h: 92,
+      path: 'digits/clock',
+      digit: currentMinute[1]
     })
 
 
@@ -843,33 +931,60 @@ Page({
       )
 
 
-    const currentDateText =
-      twoDigits(day) +
-      '/' +
-      twoDigits(month) +
-      ' ' +
-      weekDay
-
-
-    createGoldText({
-
-      x: 25,
-
+    createDigitalDigit({
+      x: 126,
       y: 463,
+      w: 16,
+      h: 24,
+      path: 'digits/date',
+      digit: twoDigits(day)[0]
+    })
 
-      w: 382,
+    createDigitalDigit({
+      x: 144,
+      y: 463,
+      w: 16,
+      h: 24,
+      path: 'digits/date',
+      digit: twoDigits(day)[1]
+    })
 
-      h: 38,
+    createNeonText({
+      x: 166,
+      y: 463,
+      w: 12,
+      h: 24,
+      text: '/',
+      textSize: 16,
+      align: hmUI.align.CENTER_H
+    })
 
-      text:
-        currentDateText,
+    createDigitalDigit({
+      x: 180,
+      y: 463,
+      w: 16,
+      h: 24,
+      path: 'digits/date',
+      digit: twoDigits(month)[0]
+    })
 
-      textSize:
-        20,
+    createDigitalDigit({
+      x: 198,
+      y: 463,
+      w: 16,
+      h: 24,
+      path: 'digits/date',
+      digit: twoDigits(month)[1]
+    })
 
-      align:
-        hmUI.align.CENTER_H
-
+    createNeonText({
+      x: 220,
+      y: 463,
+      w: 100,
+      h: 24,
+      text: weekDay,
+      textSize: 16,
+      align: hmUI.align.LEFT
     })
 
 
@@ -994,25 +1109,27 @@ Page({
     // LUNA
     // ========================================================
 
-    const moonX = 300
+    const moonX = 285
 
     const moonY = 225
+
+    const moonSize = 210
 
 
     hmUI.createWidget(
       hmUI.widget.IMG,
       {
         x:
-          moonX - 75,
+          moonX - moonSize / 2,
 
         y:
-          moonY - 75,
+          moonY - moonSize / 2,
 
         w:
-          150,
+          moonSize,
 
         h:
-          150,
+          moonSize,
 
         src:
           moonImagePath
@@ -1026,44 +1143,37 @@ Page({
     // BLANCO / GRUESO
     // ========================================================
 
-    createBoldText({
+    createNeonText({
 
-      x: 355,
+      x: 350,
 
-      y: 205,
+      y: 300,
 
-      w: 72,
+      w: 42,
 
-      h: 65,
+      h: 28,
 
       text:
         phasePercent + '%',
 
       textSize:
-        22,
-
-      color:
-        WHITE,
+        14,
 
       align:
         hmUI.align.CENTER_H
 
     })
 
+    createNeonText({
+      x: 180,
+      y: 300,
+      w: 160,
+      h: 28,
+      text: getPhaseLabel(phaseName),
+      textSize: 14,
+      align: hmUI.align.CENTER_H
+    })
 
-    // ========================================================
-    // SENSORES
-    //
-    // ESTA PARTE SE CONSERVA DE LA VERSIÓN 1.3.
-    // No estamos cambiando todavía la arquitectura.
-    // ========================================================
-console.log('SaganMoon: SENSOR HR = ' + this.heartRateSensor)
-console.log('SaganMoon: SENSOR STEP = ' + this.stepSensor)
-console.log('SaganMoon: SENSOR BAT = ' + this.batterySensor)
-
-console.log('SaganMoon: DATA HEART = ' + hmUI.data_type.HEART)
-console.log('SaganMoon: DATA STEP = ' + hmUI.data_type.STEP)
-console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
 
     // ========================================================
     // ETIQUETAS
@@ -1076,86 +1186,6 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
     // ========================================================
     // VALORES INICIALES
     // ========================================================
-
-    let heartValue = 0
-
-    let stepValue = 0
-
-    let batteryValue = 0
-
-
-    try {
-
-      heartValue =
-        this.heartRateSensor.getLast()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR FRECUENCIA = ' +
-        error
-      )
-    }
-
-
-    try {
-
-      stepValue =
-        this.stepSensor.getCurrent()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR PASOS = ' +
-        error
-      )
-    }
-
-
-    try {
-
-      batteryValue =
-        this.batterySensor.getCurrent()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR BATERIA = ' +
-        error
-      )
-    }
-
-
-    // ========================================================
-    // NORMALIZAR VALORES
-    // ========================================================
-
-    if (
-      !heartValue ||
-      heartValue < 1
-    ) {
-
-      heartValue = '--'
-    }
-
-
-    if (
-      !stepValue ||
-      stepValue < 0
-    ) {
-
-      stepValue = '--'
-    }
-
-
-    if (
-      !batteryValue ||
-      batteryValue < 0
-    ) {
-
-      batteryValue = '--'
-    }
-
 
     // ========================================================
     // POSICIÓN DE LOS INDICADORES
@@ -1173,7 +1203,7 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
     // ========================================================
 
     this.heartValueWidget =
-      createGoldText({
+      createSensorText({
 
         x: 5,
 
@@ -1183,36 +1213,20 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
 
         h: 42,
 
-        text:
-          '' + heartValue,
+        type: hmUI.data_type.HEART,
 
-        textSize:
-          27,
-
-        align:
-          hmUI.align.CENTER_H
+        maxValue: SENSOR_LIMITS.heart
 
       })
 
 
-    createGoldText({
+    createSensorIcon({
 
-      x: 5,
+      x: 52,
 
-      y: labelY,
+      y: labelY - 2,
 
-      w: 130,
-
-      h: 25,
-
-      text:
-        labels.heart,
-
-      textSize:
-        13,
-
-      align:
-        hmUI.align.CENTER_H
+      name: 'heart'
 
     })
 
@@ -1224,7 +1238,7 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
     // ========================================================
 
     this.stepValueWidget =
-      createGoldText({
+      createSensorText({
 
         x: 145,
 
@@ -1234,36 +1248,20 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
 
         h: 42,
 
-        text:
-          '' + stepValue,
+        type: hmUI.data_type.STEP,
 
-        textSize:
-          27,
-
-        align:
-          hmUI.align.CENTER_H
+        maxValue: SENSOR_LIMITS.steps
 
       })
 
 
-    createGoldText({
+    createSensorIcon({
 
-      x: 145,
+      x: 197,
 
-      y: labelY,
+      y: labelY - 2,
 
-      w: 140,
-
-      h: 25,
-
-      text:
-        labels.steps,
-
-      textSize:
-        13,
-
-      align:
-        hmUI.align.CENTER_H
+      name: 'steps'
 
     })
 
@@ -1275,7 +1273,7 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
     // ========================================================
 
     this.batteryValueWidget =
-      createGoldText({
+      createSensorText({
 
         x: 290,
 
@@ -1285,57 +1283,40 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
 
         h: 42,
 
-        text:
-          '' +
-          batteryValue +
-          '%',
+        type: hmUI.data_type.BATTERY,
 
-        textSize:
-          27,
-
-        align:
-          hmUI.align.CENTER_H
+        maxValue: SENSOR_LIMITS.battery
 
       })
 
 
-    createGoldText({
+    createSensorIcon({
 
-      x: 290,
+      x: 340,
 
-      y: labelY,
+      y: labelY - 2,
 
-      w: 137,
-
-      h: 25,
-
-      text:
-        labels.battery,
-
-      textSize:
-        13,
-
-      align:
-        hmUI.align.CENTER_H
+      name: 'battery'
 
     })
 
+    createGoldText({
 
-    // ========================================================
-    // ACTUALIZACIÓN DE SENSORES
-    //
-    // Cada 30 segundos.
-    // ========================================================
+      x: 400,
 
-    this.sensorTimer =
-      setInterval(
-        () => {
+      y: valueY,
 
-          this.updateSensorValues()
+      w: 25,
 
-        },
-        30000
-      )
+      h: 42,
+
+      text: '%',
+
+      textSize: 20,
+
+      align: hmUI.align.CENTER_H
+
+    })
 
 
     // ========================================================
@@ -1356,11 +1337,6 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
 
 
     console.log(
-      'SaganMoon: sensores activados'
-    )
-
-
-    console.log(
       'SaganMoon: idioma = ' +
       (
         isSpanish()
@@ -1371,113 +1347,109 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
   },
 
 
-  // ==========================================================
-  // ACTUALIZAR SENSORES
-  // ==========================================================
+  readHeartRate() {
+
+    if (this.heartRateSensor === null) {
+      return '--'
+    }
+
+    try {
+
+      const value =
+        this.heartRateSensor.last
+
+      return value && value > 0 ? value : '--'
+
+    } catch (error) {
+
+      console.log(
+        'SaganMoon: ERROR FRECUENCIA = ' +
+        error
+      )
+
+      return '--'
+    }
+  },
+
+
+  readSteps() {
+
+    if (this.stepSensor === null) {
+      return '--'
+    }
+
+    try {
+
+      const value =
+        this.stepSensor.current
+
+      return value !== undefined && value >= 0 ? value : '--'
+
+    } catch (error) {
+
+      console.log(
+        'SaganMoon: ERROR PASOS = ' +
+        error
+      )
+
+      return '--'
+    }
+  },
+
+
+  readBattery() {
+
+    if (this.batterySensor === null) {
+      return '--'
+    }
+
+    try {
+
+      const value =
+        this.batterySensor.current
+
+      return value !== undefined && value >= 0 ? value : '--'
+
+    } catch (error) {
+
+      console.log(
+        'SaganMoon: ERROR BATERIA = ' +
+        error
+      )
+
+      return '--'
+    }
+  },
+
 
   updateSensorValues() {
 
-    let heartValue = 0
+    const heartValue = this.readHeartRate()
 
-    let stepValue = 0
+    const stepValue = this.readSteps()
 
-    let batteryValue = 0
+    const batteryValue = this.readBattery()
 
-
-    try {
-
-      heartValue =
-        this.heartRateSensor.getLast()
-
-    } catch (error) {
-
-      heartValue = 0
-    }
-
-
-    try {
-
-      stepValue =
-        this.stepSensor.getCurrent()
-
-    } catch (error) {
-
-      stepValue = 0
-    }
-
-
-    try {
-
-      batteryValue =
-        this.batterySensor.getCurrent()
-
-    } catch (error) {
-
-      batteryValue = 0
-    }
-
-
-    if (
-      !heartValue ||
-      heartValue < 1
-    ) {
-
-      heartValue = '--'
-    }
-
-
-    if (
-      stepValue < 0 ||
-      stepValue === undefined
-    ) {
-
-      stepValue = '--'
-    }
-
-
-    if (
-      batteryValue < 0 ||
-      batteryValue === undefined
-    ) {
-
-      batteryValue = '--'
-    }
-
-
-    if (
-      this.heartValueWidget !== null
-    ) {
-
+    if (this.heartValueWidget !== null) {
       this.heartValueWidget.setProperty(
         hmUI.prop.TEXT,
         '' + heartValue
       )
     }
 
-
-    if (
-      this.stepValueWidget !== null
-    ) {
-
+    if (this.stepValueWidget !== null) {
       this.stepValueWidget.setProperty(
         hmUI.prop.TEXT,
         '' + stepValue
       )
     }
 
-
-    if (
-      this.batteryValueWidget !== null
-    ) {
-
+    if (this.batteryValueWidget !== null) {
       this.batteryValueWidget.setProperty(
         hmUI.prop.TEXT,
-        '' +
-        batteryValue +
-        '%'
+        '' + batteryValue + '%'
       )
     }
-
 
     console.log(
       'SaganMoon: sensores -> HR=' +
@@ -1507,7 +1479,6 @@ console.log('SaganMoon: DATA BATTERY = ' + hmUI.data_type.BATTERY)
       this.starTimer =
         null
     }
-
 
     if (
       this.sensorTimer !== null
