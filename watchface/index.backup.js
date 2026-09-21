@@ -1,6 +1,6 @@
 // ============================================================
 // SAGANMOON - Amazfit Bip Max
-// Versión 1.3 estable
+// Versión 1.4
 //
 // DISEÑO
 // ------------------------------------------------------------
@@ -639,42 +639,6 @@ Page({
     console.log(
       'SaganMoon: construyendo SaganMoon'
     )
-
-    try {
-
-      this.heartRateSensor = new HeartRate()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO FRECUENCIA = ' +
-        error
-      )
-    }
-
-    try {
-
-      this.stepSensor = new Step()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO PASOS = ' +
-        error
-      )
-    }
-
-    try {
-
-      this.batterySensor = new Battery()
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR INICIALIZANDO BATERIA = ' +
-        error
-      )
-    }
 
 
     // ========================================================
