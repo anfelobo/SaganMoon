@@ -638,3 +638,11 @@ install
 **Ese es el flujo principal para probar SaganMoon en el Zepp OS Simulator sin utilizar QR.**
 
 API bbase de datos https://www.freeastroapi.com/moon?utm_source
+
+
+
+Regla rápida posicion objetos
+x mayor → derecha   ➡️
+x menor → izquierda ⬅️
+y menor → arriba    ⬆️
+y mayor → abajo     ⬇️

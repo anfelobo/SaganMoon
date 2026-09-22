@@ -1,6 +1,6 @@
 // ============================================================
 // SAGANMOON - Amazfit Bip Max
-// Versión 1.3 estable
+// Versión 1.4 estable
 //
 // DISEÑO
 // ------------------------------------------------------------
@@ -851,8 +851,8 @@ WatchFace({
     // ========================================================
 
     createDigitalDigit({
-      x: 18,
-      y: 112,
+      x: 28,
+      y: 70,
       w: 68,
       h: 92,
       path: 'digits/clock',
@@ -861,7 +861,7 @@ WatchFace({
 
     createDigitalDigit({
       x: 96,
-      y: 112,
+      y: 70,
       w: 68,
       h: 92,
       path: 'digits/clock',
@@ -876,8 +876,8 @@ WatchFace({
     // ========================================================
 
     createDigitalDigit({
-      x: 18,
-      y: 210,
+      x: 28,
+      y: 190,
       w: 68,
       h: 92,
       path: 'digits/clock',
@@ -886,7 +886,7 @@ WatchFace({
 
     createDigitalDigit({
       x: 96,
-      y: 210,
+      y: 190,
       w: 68,
       h: 92,
       path: 'digits/clock',
@@ -898,19 +898,18 @@ WatchFace({
     // LÍNEA DORADA
     // ========================================================
 
-    hmUI.createWidget(
-      hmUI.widget.FILL_RECT,
-      {
-        x: 42,
-        y: 330,
+hmUI.createWidget(
+  hmUI.widget.FILL_RECT,
+  {
+    x: 15,
+    y: 330,
 
-        w: 135,
-        h: 2,
+    w: 402,
+    h: 2,
 
-        color:
-          GOLD
-      }
-    )
+    color: GOLD
+  }
+)
 
 
     // ========================================================
@@ -979,11 +978,11 @@ WatchFace({
 
     createNeonText({
       x: 220,
-      y: 463,
+      y: 460,
       w: 100,
-      h: 24,
+      h: 29,
       text: weekDay,
-      textSize: 16,
+      textSize: 29,
       align: hmUI.align.LEFT
     })
 
@@ -1109,11 +1108,11 @@ WatchFace({
     // LUNA
     // ========================================================
 
-    const moonX = 285
+    const moonX = 290
 
-    const moonY = 225
+    const moonY = 165
 
-    const moonSize = 210
+    const moonSize = 500
 
 
     hmUI.createWidget(
@@ -1147,17 +1146,17 @@ WatchFace({
 
       x: 350,
 
-      y: 300,
+      y: 280,
 
-      w: 42,
+      w: 55,
 
-      h: 28,
+      h: 34,
 
       text:
         phasePercent + '%',
 
       textSize:
-        14,
+        20,
 
       align:
         hmUI.align.CENTER_H
@@ -1165,12 +1164,12 @@ WatchFace({
     })
 
     createNeonText({
-      x: 180,
-      y: 300,
-      w: 160,
-      h: 28,
-      text: getPhaseLabel(phaseName),
-      textSize: 14,
+      x: 155,
+      y: 280,
+      w: 205,
+      h: 34,
+      text: getPhaseLabel(phaseName).toUpperCase(),
+      textSize: 18,
       align: hmUI.align.CENTER_H
     })
 
