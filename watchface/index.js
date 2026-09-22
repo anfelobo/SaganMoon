@@ -288,22 +288,56 @@ function getLabels() {
 
 function getPhaseLabel(phaseName) {
 
-  if (!isSpanish()) {
-    return phaseName
+  const spanishLabels = {
+    'New Moon': 'NUEVA',
+    'Waxing Crescent': 'CRECIENTE',
+    'First Quarter': '1/4 CRECIENTE',
+    'Waxing Gibbous': 'GIBOSA +',
+    'Full Moon': 'LUNA LLENA',
+    'Waning Gibbous': 'GIBOSA -',
+    'Last Quarter': '1/4 MENGUANTE',
+    'Waning Crescent': 'MENGUANTE'
   }
 
-  const phaseLabels = {
-    'New Moon': 'Luna nueva',
-    'Waxing Crescent': 'Creciente',
-    'First Quarter': 'Cuarto creciente',
-    'Waxing Gibbous': 'Gibosa creciente',
-    'Full Moon': 'Luna llena',
-    'Waning Gibbous': 'Gibosa menguante',
-    'Last Quarter': 'Cuarto menguante',
-    'Waning Crescent': 'Menguante'
+  const englishLabels = {
+    'New Moon': 'NEW',
+    'Waxing Crescent': 'CRESCENT',
+    'First Quarter': '1/4 WAXING',
+    'Waxing Gibbous': 'GIBBOUS +',
+    'Full Moon': 'FULL MOON',
+    'Waning Gibbous': 'GIBBOUS -',
+    'Last Quarter': '1/4 WANING',
+    'Waning Crescent': 'WANING'
   }
 
-  return phaseLabels[phaseName] || phaseName
+  const labels = isSpanish()
+    ? spanishLabels
+    : englishLabels
+
+
+  return labels[phaseName] || phaseName
+}
+
+
+function getPhaseAssetName(phaseName) {
+
+  const phaseNames = {
+    'New Moon': 'NEW_MOON',
+    'Waxing Crescent': 'WAXING_CRESCENT',
+    'First Quarter': 'FIRST_QUARTER',
+    'Waxing Gibbous': 'WAXING_GIBBOUS',
+    'Full Moon': 'FULL_MOON',
+    'Waning Gibbous': 'WANING_GIBBOUS',
+    'Last Quarter': 'LAST_QUARTER',
+    'Waning Crescent': 'WANING_CRESCENT'
+  }
+
+
+  return (
+    isSpanish() ? 'ES_' : 'EN_'
+  ) + (
+    phaseNames[phaseName] || 'NEW_MOON'
+  )
 }
 
 
@@ -572,6 +606,137 @@ function createDigitalDigit(options) {
         '/' +
         options.digit +
         '.png'
+    }
+  )
+}
+
+
+function normalizeImageText(text) {
+
+  return text
+    .replace(/[ÁÀÂÄ]/g, 'A')
+    .replace(/[ÉÈÊË]/g, 'E')
+    .replace(/[ÍÌÎÏ]/g, 'I')
+    .replace(/[ÓÒÔÖ]/g, 'O')
+    .replace(/[ÚÙÛÜ]/g, 'U')
+}
+
+
+function getLetterAssetName(character) {
+
+  const symbolNames = {
+    '/': 'SLASH',
+    '%': 'PERCENT',
+    '+': 'PLUS',
+    '-': 'MINUS'
+  }
+
+
+  return symbolNames[character] || character
+}
+
+
+function getTextAssetPath(character) {
+
+  return /[0-9]/.test(character) || character === '/'
+    ? 'numbers/'
+    : 'letters/'
+}
+
+
+function createLetterText(options) {
+
+  const text = normalizeImageText(options.text).toUpperCase()
+  const assetFolder = options.assetFolder
+  const characters = text.split('')
+  const letterCount = characters.filter(
+    character => character !== ' '
+  ).length
+  const spaceCount = characters.length - letterCount
+  const spacing = options.spacing
+  const spaceWidth = options.spaceWidth
+  const availableWidth = options.w -
+    (spaceCount * spaceWidth) -
+    ((characters.length - 1) * spacing)
+  const letterWidth = Math.min(
+    options.maxLetterWidth,
+    Math.floor(availableWidth / letterCount)
+  )
+  const letterHeight = Math.floor(
+    letterWidth * 30 / 22
+  )
+  let textWidth = 0
+
+
+  for (let i = 0; i < characters.length; i++) {
+
+    textWidth += characters[i] === ' '
+      ? spaceWidth
+      : letterWidth
+
+    if (i < characters.length - 1) {
+      textWidth += spacing
+    }
+  }
+
+
+  let x = options.x
+  const y = options.y +
+    Math.floor((options.h - letterHeight) / 2)
+
+
+  if (options.align === hmUI.align.CENTER_H) {
+    x += (options.w - textWidth) / 2
+  }
+
+
+  for (let i = 0; i < characters.length; i++) {
+
+    const character = characters[i]
+
+
+    if (character !== ' ') {
+
+      hmUI.createWidget(
+        hmUI.widget.IMG,
+        {
+          x: x,
+          y: y,
+          w: letterWidth,
+          h: letterHeight,
+          src:
+            (assetFolder
+              ? assetFolder + '/'
+              : getTextAssetPath(character)) +
+            getLetterAssetName(character) +
+            '.png'
+        }
+      )
+    }
+
+
+    x += character === ' '
+      ? spaceWidth
+      : letterWidth
+
+
+    if (i < characters.length - 1) {
+      x += spacing
+    }
+  }
+}
+
+
+function createPhaseImage(options) {
+
+  return hmUI.createWidget(
+    hmUI.widget.IMG,
+    {
+      x: options.x,
+      y: options.y,
+      w: options.w,
+      h: options.h,
+      src: 'phase_labels/' + options.name + '.png'
     }
   )
 }
@@ -948,13 +1113,15 @@ hmUI.createWidget(
       digit: twoDigits(day)[1]
     })
 
-    createNeonText({
+    createLetterText({
       x: 170,
       y: 460,
       w: 12,
       h: 30,
       text: '/',
-      textSize: 16,
+      maxLetterWidth: 12,
+      spacing: 0,
+      spaceWidth: 0,
       align: hmUI.align.CENTER_H
     })
 
@@ -976,13 +1143,15 @@ hmUI.createWidget(
       digit: twoDigits(month)[1]
     })
 
-    createNeonText({
+    createLetterText({
       x: 236,
       y: 460,
       w: 100,
-      h: 29,
+      h: 30,
       text: weekDay,
-      textSize: 29,
+      maxLetterWidth: 22,
+      spacing: 1,
+      spaceWidth: 8,
       align: hmUI.align.LEFT
     })
 
@@ -1108,11 +1277,11 @@ hmUI.createWidget(
     // LUNA
     // ========================================================
 
-    const moonX = 290
+    const moonX = 340
 
-    const moonY = 165
+    const moonY = 185
 
-    const moonSize = 500
+    const moonSize = 600
 
 
     hmUI.createWidget(
@@ -1142,7 +1311,7 @@ hmUI.createWidget(
     // BLANCO / GRUESO
     // ========================================================
 
-    createNeonText({
+    createLetterText({
 
       x: 350,
 
@@ -1155,22 +1324,29 @@ hmUI.createWidget(
       text:
         phasePercent + '%',
 
-      textSize:
-        20,
+      assetFolder:
+        'phase_letters',
+
+      maxLetterWidth:
+        13,
+
+      spacing:
+        1,
+
+      spaceWidth:
+        0,
 
       align:
         hmUI.align.CENTER_H
 
     })
 
-    createNeonText({
+    createPhaseImage({
       x: 155,
       y: 280,
       w: 205,
       h: 34,
-      text: getPhaseLabel(phaseName).toUpperCase(),
-      textSize: 18,
-      align: hmUI.align.CENTER_H
+      name: getPhaseAssetName(phaseName)
     })
 
 
@@ -1299,7 +1475,7 @@ hmUI.createWidget(
 
     })
 
-    createGoldText({
+    createLetterText({
 
       x: 400,
 
@@ -1311,7 +1487,11 @@ hmUI.createWidget(
 
       text: '%',
 
-      textSize: 20,
+      maxLetterWidth: 22,
+
+      spacing: 0,
+
+      spaceWidth: 0,
 
       align: hmUI.align.CENTER_H
 
