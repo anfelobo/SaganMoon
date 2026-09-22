@@ -931,53 +931,53 @@ hmUI.createWidget(
 
 
     createDigitalDigit({
-      x: 126,
-      y: 463,
-      w: 16,
-      h: 24,
-      path: 'digits/date',
+      x: 122,
+      y: 460,
+      w: 22,
+      h: 30,
+      path: 'numbers',
       digit: twoDigits(day)[0]
     })
 
     createDigitalDigit({
-      x: 144,
-      y: 463,
-      w: 16,
-      h: 24,
-      path: 'digits/date',
+      x: 146,
+      y: 460,
+      w: 22,
+      h: 30,
+      path: 'numbers',
       digit: twoDigits(day)[1]
     })
 
     createNeonText({
-      x: 166,
-      y: 463,
+      x: 170,
+      y: 460,
       w: 12,
-      h: 24,
+      h: 30,
       text: '/',
       textSize: 16,
       align: hmUI.align.CENTER_H
     })
 
     createDigitalDigit({
-      x: 180,
-      y: 463,
-      w: 16,
-      h: 24,
-      path: 'digits/date',
+      x: 184,
+      y: 460,
+      w: 22,
+      h: 30,
+      path: 'numbers',
       digit: twoDigits(month)[0]
     })
 
     createDigitalDigit({
-      x: 198,
-      y: 463,
-      w: 16,
-      h: 24,
-      path: 'digits/date',
+      x: 208,
+      y: 460,
+      w: 22,
+      h: 30,
+      path: 'numbers',
       digit: twoDigits(month)[1]
     })
 
     createNeonText({
-      x: 220,
+      x: 236,
       y: 460,
       w: 100,
       h: 29,
