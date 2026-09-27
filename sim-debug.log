@@ -1,0 +1,170 @@
+=== Simulator Debug Log Started ===
+Timestamp: 2026-09-21T18:31:31.217Z
+
+2026-09-21T18:31:37.482Z [L0]: [firmware_simulator]: simulator opening...
+2026-09-21T18:31:40.076Z [L0]: [firmware_simulator]: ager_26.3.240.0_x64__3847v3x7pw1km' (AUMId `PythonSoftwareFoundation.PythonManager_3847v3x7pw1km!Pythonw.Exe') supports 2 extensions but has no verbs
+2026-09-21T18:31:40.214Z [L0]: 9/21 [0]18:31:39.934 I/quickjs SBEngine: js_trigger_gc *****rt->malloc_gc_threshold is now 1329174, malloc_size 886116
+2026-09-21T18:31:40.458Z [L0]: 9/21 [0]18:31:40.177 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.157Z] [jsfwk.debug] [ctx] [-] newCtx{"app":0,"module":0,"appId":1} 
+2026-09-21T18:31:40.476Z [L0]: 9/21 [0]18:31:40.196 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.191Z] [jsfwk.debug] [ctx] [-] ctx{"app":0,"module":0,"appId":1}.apply=addFWListener["[Function bound handle]"] 
+2026-09-21T18:31:40.491Z [L0]: 9/21 [0]18:31:40.211 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.208Z] [jsfwk.info ] [framework] [-] framework init 
+2026-09-21T18:31:40.494Z [L0]: 9/21 [0]18:31:40.215 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.212Z] [jsfwk.info ] [framework] [-] framework version => 4.2 
+2026-09-21T18:31:40.499Z [L0]: 9/21 [0]18:31:40.219 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.216Z] [jsfwk.info ] [framework] [-] framework buildDate => 2025-09-19T08:58:30.290Z 
+2026-09-21T18:31:40.503Z [L0]: 9/21 [0]18:31:40.223 I/quickjs-libc SBEngine: [jsrt-4.2.0-release.1-402] [2026-09-21T18:31:40.220Z] [jsfwk.info ] [framework] [-] framework commit => b3cc2d2 
+2026-09-21T18:31:47.417Z [L0]: 9/21 [0]18:31:47.137 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:31:47.470Z [L0]: 9/21 [0]18:31:47.191 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:31:47.966Z [L0]: 9/21 [0]18:31:47.686 I/quickjs SBEngine: js_trigger_gc *****rt->malloc_gc_threshold is now 1780235, malloc_size 1424188
+2026-09-21T18:31:47.967Z [L0]: 9/21 [0]18:31:47.687 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:31:48.041Z [L0]: 9/21 [0]18:31:47.762 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:31:48.050Z [L0]: 9/21 [0]18:31:47.770 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:31:48.163Z [L0]: 9/21 [0]18:31:47.883 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-21 
+2026-09-21T18:31:48.163Z [L0]: 9/21 [0]18:31:47.884 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:31:48.164Z [L0]: 9/21 [0]18:31:47.885 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:31:48.165Z [L0]: 9/21 [0]18:31:47.885 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:31:48.165Z [L0]: 9/21 [0]18:31:47.885 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T18:31:48.166Z [L0]: 9/21 [0]18:31:47.886 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:31:48.188Z [L0]: 9/21 [0]18:31:47.908 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'getLast' of null 
+2026-09-21T18:31:48.189Z [L0]: 9/21 [0]18:31:47.909 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'getCurrent' of null 
+2026-09-21T18:31:48.191Z [L0]: 9/21 [0]18:31:47.911 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'getCurrent' of null 
+2026-09-21T18:31:48.272Z [L0]: 9/21 [0]18:31:47.992 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
+2026-09-21T18:32:07.123Z [L0]: 9/21 [0]18:32:06.843 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T18:32:07.167Z [L0]: 9/21 [0]18:32:06.887 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T18:32:07.203Z [L0]: 9/21 [0]18:32:06.923 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:32:07.228Z [L0]: 9/21 [0]18:32:06.948 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:32:07.695Z [L0]: 9/21 [0]18:32:07.415 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:32:07.769Z [L0]: 9/21 [0]18:32:07.488 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:32:07.770Z [L0]: 9/21 [0]18:32:07.489 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T18:32:07.770Z [L0]: 9/21 [0]18:32:07.490 D/jsRtApkMng SBEngine: perf_update initTime 3 ms
+2026-09-21T18:32:07.771Z [L0]: 9/21 [0]18:32:07.490 D/js_rt_continer SBEngine: runContinerFunc: run Continer func: onDataRestore9/21 [0]18:32:07.490 D/js_rt_continer SBEngine: runContinerFunc: run Continer func: build
+2026-09-21T18:32:07.772Z [L0]: 9/21 [0]18:32:07.491 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:32:07.868Z [L0]: 9/21 [0]18:32:07.588 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-21 
+2026-09-21T18:32:07.869Z [L0]: 9/21 [0]18:32:07.588 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:32:07.869Z [L0]: 9/21 [0]18:32:07.588 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:32:07.870Z [L0]: 9/21 [0]18:32:07.589 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:32:07.871Z [L0]: [32m9/21 [0]18:32:07.589 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T18:32:07.871Z [L0]: 9/21 [0]18:32:07.590 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:32:07.886Z [L0]: 9/21 [0]18:32:07.606 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:32:07.887Z [L0]: 9/21 [0]18:32:07.607 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:32:07.889Z [L0]: 9/21 [0]18:32:07.609 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:32:07.966Z [L0]: 9/21 [0]18:32:07.687 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
+2026-09-21T18:33:00.598Z [L0]: 9/21 [0]18:33:00.318 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:33:00.600Z [L0]: 9/21 [0]18:33:00.320 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:00.601Z [L0]: 9/21 [0]18:33:00.321 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:00.603Z [L0]: 9/21 [0]18:33:00.323 I/quickjs-libc SBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:33:00.603Z [L0]: 9/21 [0]18:33:00.323 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:33:20.297Z [L0]: 9/21 [0]18:33:00.323 I/quickjs-libc SBEngine:     at updateSensorVal9/21 [0]18:33:20.017 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T18:33:20.336Z [L0]: 9/21 [0]18:33:20.056 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T18:33:20.375Z [L0]: 9/21 [0]18:33:20.095 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:33:20.408Z [L0]: 9/21 [0]18:33:20.128 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:33:20.958Z [L0]: 9/21 [0]18:33:20.678 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:33:21.042Z [L0]: 9/21 [0]18:33:20.762 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:33:21.043Z [L0]: 9/21 [0]18:33:20.762 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T18:33:21.043Z [L0]: 9/21 [0]18:33:20.763 D/jsRtApkMng SBEngine: perf_update initTime 3 ms
+2026-09-21T18:33:21.045Z [L0]: 9/21 [0]18:33:20.763 D/js_rt_continer9/21 [0]18:33:20.764 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:33:21.153Z [L0]: 9/21 [0]18:33:20.873 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-21 
+2026-09-21T18:33:21.154Z [L0]: [0m9/21 [0]18:33:20.873 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:33:21.154Z [L0]: 9/21 [0]18:33:20.874 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:33:21.155Z [L0]: [32m9/21 [0]18:33:20.874 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:33:21.157Z [L0]: 9/21 [0]18:33:20.874 I/quickjs-libc SBEngine: SaganMoon:9/21 [0]18:33:20.877 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:33:21.176Z [L0]: 9/21 [0]18:33:20.895 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:33:21.178Z [L0]: 9/21 [0]18:33:20.897 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:21.267Z [L0]: 9/21 [0]18:33:20.899 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null9/21 [0]18:33:20.986 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
+2026-09-21T18:33:21.909Z [L0]: 9/21 [0]18:33:21.629 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T18:33:21.954Z [L0]: 9/21 [0]18:33:21.673 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T18:33:21.988Z [L0]: 9/21 [0]18:33:21.707 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:33:22.012Z [L0]: 9/21 [0]18:33:21.732 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:33:22.484Z [L0]: 9/21 [0]18:33:22.204 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:33:22.559Z [L0]: [09/21 [0]18:33:22.279 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:33:22.560Z [L0]: 9/21 [0]18:33:22.280 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T18:33:22.561Z [L0]: 9/21 [0]18:33:22.280 D/jsRtApkMng SBEngine: perf_update initTime 1 ms
+2026-09-21T18:33:22.562Z [L0]: 9/21 [0]18:33:22.280 D/js_rt_continer SBEngine: runContinerFunc: run Continer func: onDataRest9/21 [0]18:33:22.282 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:33:22.655Z [L0]: 9/21 [0]18:33:22.374 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-219/21 [0]18:33:22.375 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:33:22.655Z [L0]: 9/21 [0]18:33:22.375 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:33:22.656Z [L0]: 9/21 [0]18:33:22.375 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:33:22.656Z [L0]: 9/21 [0]18:33:22.376 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T18:33:22.657Z [L0]: 9/21 [0]18:33:22.376 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:33:22.677Z [L0]: 9/21 [0]18:33:22.397 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:33:22.678Z [L0]: [0m9/21 [0]18:33:22.398 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:22.679Z [L0]: 9/21 [0]18:33:22.399 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:22.757Z [L0]: 9/21 [0]18:33:22.477 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
+2026-09-21T18:33:54.591Z [L0]: 9/21 [0]18:33:54.311 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:33:54.592Z [L0]: 9/21 [0]18:33:54.312 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:33:54.595Z [L0]: 9/21 [0]18:33:54.314 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null9/21 [0]18:33:54.315 I/quickjs-libc SBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:33:54.596Z [L0]: 9/21 [0]18:33:54.315 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:33:54.596Z [L0]: 9/21 [0]18:33:54.316 I/quickjs-libc SBEngine:     at updateSensorValues (/storage/data/js_watchfaces/00006109/watchface/index.js:2258)
+2026-09-21T18:34:26.361Z [L0]:     at <anonymous> (/storage/data9/21 [0]18:34:26.080 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:34:26.362Z [L0]: 9/21 [0]18:34:26.082 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:34:26.364Z [L0]: 9/21 [0]18:34:26.083 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:34:26.365Z [L0]: 9/21 [0]18:34:26.085 I/quickjs-libc SBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:34:26.365Z [L0]: 9/21 [0]18:34:26.085 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:34:26.366Z [L0]: 9/21 [0]18:34:26.085 I/quickjs-libc SBEngine:     at updateSensorValues (/storage/data/js_watchfaces/00006109/watchface/index.js:2258)
+2026-09-21T18:34:26.366Z [L0]:     at <anonymous> (/storage/data/js_watchfaces/00006109/watchface/index.js:2220)
+2026-09-21T18:34:26.367Z [L0]:     at <anonymous> (/storage
+2026-09-21T18:34:57.894Z [L0]: 9/21 [0]18:34:57.614 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:34:57.895Z [L0]: 9/21 [0]18:34:57.615 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:34:57.896Z [L0]: 9/21 [0]18:34:57.616 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:34:57.898Z [L0]: 9/21 [0]18:34:57.617 I/quickjs-libc SBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:34:57.898Z [L0]: 9/21 [0]18:34:57.618 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:34:57.898Z [L0]: 9/21 [0]18:34:57.618 I/quickjs-libc SBEngine:     at updateSensorValues (/storage/data/js_watchfaces/00006109/watchface/index.js:2258)
+2026-09-21T18:34:57.899Z [L0]:     at <anonymous> (/storage/data/js_watchfaces/00006109/watchface/index.js:2220)
+2026-09-21T18:34:57.899Z [L0]:     at <anonymous> (/storage
+2026-09-21T18:35:29.648Z [L0]: [09/21 [0]18:35:29.367 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:35:29.649Z [L0]: 9/21 [0]18:35:29.369 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:35:29.651Z [L0]: 9/21 [0]18:35:29.370 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:35:29.652Z [L0]: 9/21 [0]18:35:29.371 I/quickjs-libc SBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:35:29.652Z [L0]: 9/21 [0]18:35:29.372 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:36:30.021Z [L0]: 9/21 [0]18:35:29.372 I/quickjs-libc SBEngine:     at updateSensorValues (/storage/data/js_watchfaces/00006109/watchface/index.js:2258)9/21 [0]18:36:29.741 I/quickjs-libc SBEngine: SaganMoon: ERROR FRECUENCIA = TypeError: cannot read property 'last' of null 
+2026-09-21T18:36:30.022Z [L0]: 9/21 [0]18:36:29.742 I/quickjs-libc SBEngine: SaganMoon: ERROR PASOS = TypeError: cannot read property 'current' of null 
+2026-09-21T18:36:30.023Z [L0]: 9/21 [0]18:36:29.743 I/quickjs-libc SBEngine: SaganMoon: ERROR BATERIA = TypeError: cannot read property 'current' of null 
+2026-09-21T18:36:30.024Z [L0]: 9/21 [0]18:36:29.744 I/js_native.h SBEngine: js_call_handler fail
+2026-09-21T18:36:30.024Z [L0]: 9/21 [0]18:36:29.744 I/quickjs-libcSBEngine: TypeError: cannot read property 'setProperty' of null
+2026-09-21T18:36:30.025Z [L0]: 9/21 [0]18:36:29.744 I/quickjs-libc SBEngine: total length 230
+2026-09-21T18:37:02.507Z [L0]: 9/21 [0]18:36:29.745 I/quickjs-libc SBEngine:     at updateSensorValues (/storage/data/js_watc9/21 [0]18:37:02.228 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T18:37:02.543Z [L0]: 9/21 [0]18:37:02.263 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T18:37:02.575Z [L0]: 9/21 [0]18:37:02.295 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:37:02.599Z [L0]: 9/21 [0]18:37:02.319 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:37:03.062Z [L0]: 9/21 [0]18:37:02.782 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:37:03.136Z [L0]: 9/21 [0]18:37:02.856 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:37:03.137Z [L0]: 9/21 [0]18:37:02.856 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T18:37:03.137Z [L0]: 9/21 [0]18:37:02.857 D/jsRtApkMng SBEngine: perf_update initTime 2 ms
+2026-09-21T18:37:03.138Z [L0]: 9/21 [0]18:37:02.857 D/js_rt_continer SBEngine: run9/21 [0]18:37:02.858 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:37:03.231Z [L0]: 9/21 [0]18:37:02.951 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-21 
+2026-09-21T18:37:03.232Z [L0]: 9/21 [0]18:37:02.952 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:37:03.232Z [L0]: 9/21 [0]18:37:02.952 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:37:03.233Z [L0]: 9/21 [0]18:37:02.952 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:37:03.233Z [L0]: 9/21 [0]18:37:02.953 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T18:37:03.234Z [L0]: 9/21 [0]18:37:02.953 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:38:05.209Z [L0]: 9/21 [0]18:37:03.045 I/quickjs-libc SBEngine: SaganMoon: idioma = ES9/21 [0]18:38:04.929 I/quickjs-libc SBEngine: SaganMoon: sensores -> HR=-- STEP=-- BAT=-- 
+2026-09-21T18:38:37.007Z [L0]: 9/21 [0]18:38:36.727 I/quickjs-libc SBEngine: SaganMoon: sensores -> HR=-- STEP=-- BAT=-- 
+2026-09-21T18:39:08.574Z [L0]: 9/21 [0]18:39:08.294 I/quickjs-libc SBEngine: SaganMoon: sensores -> HR=-- STEP=-- BAT=-- 
+2026-09-21T18:39:36.962Z [L0]: [09/21 [0]18:39:36.682 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T18:39:37.005Z [L0]: 9/21 [0]18:39:36.725 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T18:39:37.040Z [L0]: 9/21 [0]18:39:36.760 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T18:39:37.065Z [L0]: 9/21 [0]18:39:36.785 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T18:39:37.542Z [L0]: 9/21 [0]18:39:37.262 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T18:39:37.620Z [L0]: 9/21 [0]18:39:37.339 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T18:39:37.621Z [L0]: 9/21 [0]18:39:37.340 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T18:39:37.621Z [L0]: 9/21 [0]18:39:37.340 D/jsRtApkMng SBEngine: perf_update initTime 1 ms
+2026-09-21T18:39:37.622Z [L0]: 9/21 [0]18:39:37.39/21 [0]18:39:37.342 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T18:39:37.721Z [L0]: 9/21 [0]18:39:37.441 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-21 
+2026-09-21T18:39:37.722Z [L0]: 9/21 [0]18:39:37.441 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T18:39:37.723Z [L0]: 9/21 [0]18:39:37.441 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T18:39:37.723Z [L0]: 9/21 [0]18:39:37.442 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T18:39:37.724Z [L0]: 9/21 [0]18:39:37.442 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T18:39:37.724Z [L0]: 9/21 [0]18:39:37.443 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T18:39:37.824Z [L0]: 9/21 [0]18:39:37.544 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
+2026-09-21T19:10:41.743Z [L0]: 9/21 [0]19:10:41.463 I/quickjs-libc SBEngine: SaganMoon: cerrando watchface 
+2026-09-21T19:10:41.788Z [L0]: 9/21 [0]19:10:41.508 I/quickjs-libc SBEngine: app on destroy invoke 
+2026-09-21T19:10:41.828Z [L0]: 9/21 [0]19:10:41.549 I/quickjs-libc SBEngine: current filepath: /app.js 
+2026-09-21T19:10:41.854Z [L0]: 9/21 [0]19:10:41.575 I/quickjs-libc SBEngine: app on create invoke 
+2026-09-21T19:10:42.408Z [L0]: 9/21 [0]19:10:42.128 I/quickjs-libc SBEngine: current filepath: /watchface/index.js 
+2026-09-21T19:10:42.499Z [L0]: 9/21 [0]19:10:42.219 I/quickjs-libc SBEngine: SaganMoon: iniciando watchface 
+2026-09-21T19:10:42.500Z [L0]: 9/21 [0]19:10:42.220 I/quickjs-libc SBEngine: SaganMoon: hmSensor no disponible 
+2026-09-21T19:10:42.500Z [L0]: 9/21 [0]19:10:42.220 D/jsRtApkMng SBEngine: perf_update initTime 2 ms
+2026-09-21T19:10:42.501Z [L0]: 9/21 [0]19:10:42.220 D/js_rt_continer SBEngine: runContinerFunc: run Continer func: onDataRestore9/21 [0]19:10:42.221 D/js_rt_continer SBEngine: runContinerFunc: run Continer func: build
+2026-09-21T19:10:42.501Z [L0]: 9/21 [0]19:10:42.221 I/quickjs-libc SBEngine: SaganMoon: construyendo SaganMoon 
+2026-09-21T19:10:42.613Z [L0]: 9/21 [0]19:10:42.333 I/quickjs-libc SBEngine: SaganMoon: fecha = 2026-09-219/21 [0]19:10:42.333 I/quickjs-libc SBEngine: SaganMoon: fase = Waxing Gibbous 
+2026-09-21T19:10:42.614Z [L0]: 9/21 [0]19:10:42.334 I/quickjs-libc SBEngine: SaganMoon: iluminación = 76% 
+2026-09-21T19:10:42.615Z [L0]: 9/21 [0]19:10:42.335 I/quickjs-libc SBEngine: SaganMoon: ángulo = 121.61° 
+2026-09-21T19:10:42.616Z [L0]: 9/21 [0]19:10:42.335 I/quickjs-libc SBEngine: SaganMoon: creciente = true 
+2026-09-21T19:10:42.617Z [L0]: 9/21 [0]19:10:42.336 I/quickjs-libc SBEngine: SaganMoon: imagen lunar = moon_08.png 
+2026-09-21T19:10:42.726Z [L0]: 9/21 [0]19:10:42.447 I/quickjs-libc SBEngine: SaganMoon: idioma = ES 
