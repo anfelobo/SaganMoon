@@ -646,3 +646,32 @@ x mayor → derecha   ➡️
 x menor → izquierda ⬅️
 y menor → arriba    ⬆️
 y mayor → abajo     ⬇️
+
+Distribucion de las imagenes de la luna para coincidir con la data de la APIen el JS
+00  →   0°    → 🌑 Nueva
+01  →  16°    → 🌒
+02  →  33°    → 🌒
+03  →  49°    → 🌒
+04  →  65°    → 🌓
+05  →  82°    → 🌔
+06  →  98°    → 🌔
+07  → 115°    → 🌔
+08  → 131°    → 🌔
+09  → 147°    → 🌔
+10  → 164°    → 🌔
+11  → 180°    → 🌕 Llena
+12  → 196°    → 🌖
+13  → 213°    → 🌖
+14  → 229°    → 🌖
+15  → 245°    → 🌖
+16  → 262°    → 🌗
+17  → 278°    → 🌘
+18  → 295°    → 🌘
+19  → 311°    → 🌘
+20  → 327°    → 🌘
+21  → 344°    → 🌘
+00  → 360°    → 🌑 Nueva
+
+publicar para escanear y enviar por BT
+
+zeus preview -t 432x514-amazfit-bip-max
