@@ -1,10 +1,18 @@
+
 // ============================================================
 // SAGANMOON - Amazfit Bip Max
-// Versión 1.5
+// Versión 1.7
 // ============================================================
 
 import * as hmUI from '@zos/ui'
 import { getLanguage } from '@zos/settings'
+
+import {
+  createClock,
+  startClock,
+  stopClock,
+  getCurrentDateInfo
+} from './clock.js'
 
 import moonData from './moon_data.js'
 
@@ -14,7 +22,6 @@ import moonData from './moon_data.js'
 
 const SCREEN_WIDTH = 432
 const SCREEN_HEIGHT = 514
-
 const MOON_IMAGE_COUNT = 22
 
 const BLACK = 0x000000
@@ -29,40 +36,33 @@ const DARK_CYAN = 0x005A6E
 // ============================================================
 
 const starDefinitions = [
-
-  { x: 24,  y: 48,  r: 2, alpha: 175 },
-  { x: 88,  y: 31,  r: 1, alpha: 130 },
-  { x: 151, y: 65,  r: 2, alpha: 205 },
-  { x: 224, y: 27,  r: 1, alpha: 150 },
-  { x: 382, y: 40,  r: 2, alpha: 190 },
-
-  { x: 52,  y: 122, r: 1, alpha: 145 },
+  { x: 24, y: 48, r: 2, alpha: 175 },
+  { x: 88, y: 31, r: 1, alpha: 130 },
+  { x: 151, y: 65, r: 2, alpha: 205 },
+  { x: 224, y: 27, r: 1, alpha: 150 },
+  { x: 382, y: 40, r: 2, alpha: 190 },
+  { x: 52, y: 122, r: 1, alpha: 145 },
   { x: 137, y: 105, r: 2, alpha: 180 },
   { x: 205, y: 150, r: 1, alpha: 135 },
   { x: 365, y: 105, r: 1, alpha: 155 },
   { x: 410, y: 168, r: 2, alpha: 180 },
-
-  { x: 20,  y: 215, r: 1, alpha: 160 },
+  { x: 20, y: 215, r: 1, alpha: 160 },
   { x: 172, y: 235, r: 2, alpha: 145 },
   { x: 405, y: 265, r: 1, alpha: 175 },
-
-  { x: 46,  y: 350, r: 2, alpha: 185 },
+  { x: 46, y: 350, r: 2, alpha: 185 },
   { x: 185, y: 375, r: 1, alpha: 140 },
   { x: 292, y: 350, r: 2, alpha: 175 },
   { x: 392, y: 390, r: 1, alpha: 155 },
-
-  { x: 30,  y: 438, r: 1, alpha: 150 },
+  { x: 30, y: 438, r: 1, alpha: 150 },
   { x: 218, y: 425, r: 2, alpha: 170 },
   { x: 370, y: 445, r: 1, alpha: 140 }
-
 ]
 
 // ============================================================
-// DOS DÍGITOS
+// UTILIDADES
 // ============================================================
 
 function twoDigits(value) {
-
   if (value < 10) {
     return '0' + value
   }
@@ -75,7 +75,6 @@ function twoDigits(value) {
 // ============================================================
 
 function getMoonData(year, month, day) {
-
   const calendarDate =
     year +
     '-' +
@@ -88,7 +87,6 @@ function getMoonData(year, month, day) {
     i < moonData.records.length;
     i++
   ) {
-
     const record =
       moonData.records[i]
 
@@ -96,7 +94,6 @@ function getMoonData(year, month, day) {
       record.calendar_date ===
       calendarDate
     ) {
-
       return record
     }
   }
@@ -104,11 +101,7 @@ function getMoonData(year, month, day) {
   return null
 }
 
-// ============================================================
-// ============================================================
-
 function getFallbackMoonData(year, month, day) {
-
   const targetDate =
     new Date(
       year,
@@ -130,7 +123,10 @@ function getFallbackMoonData(year, month, day) {
     )
 
   const millisecondsPerDay =
-    24 * 60 * 60 * 1000
+    24 *
+    60 *
+    60 *
+    1000
 
   const synodicPeriod =
     29.530588853
@@ -147,7 +143,8 @@ function getFallbackMoonData(year, month, day) {
     synodicPeriod
 
   if (lunarAge < 0) {
-    lunarAge += synodicPeriod
+    lunarAge +=
+      synodicPeriod
   }
 
   const phaseAngle =
@@ -165,50 +162,31 @@ function getFallbackMoonData(year, month, day) {
         Math.PI /
         180
       )
-    ) /
-    2
+    ) / 2
 
   let phaseName
 
   if (phaseAngle < 22.5) {
-
     phaseName = 'New Moon'
-
   } else if (phaseAngle < 67.5) {
-
     phaseName = 'Waxing Crescent'
-
   } else if (phaseAngle < 112.5) {
-
     phaseName = 'First Quarter'
-
   } else if (phaseAngle < 157.5) {
-
     phaseName = 'Waxing Gibbous'
-
   } else if (phaseAngle < 202.5) {
-
     phaseName = 'Full Moon'
-
   } else if (phaseAngle < 247.5) {
-
     phaseName = 'Waning Gibbous'
-
   } else if (phaseAngle < 292.5) {
-
     phaseName = 'Last Quarter'
-
   } else if (phaseAngle < 337.5) {
-
     phaseName = 'Waning Crescent'
-
   } else {
-
     phaseName = 'New Moon'
   }
 
   return {
-
     calendar_date:
       year +
       '-' +
@@ -217,7 +195,6 @@ function getFallbackMoonData(year, month, day) {
       twoDigits(day),
 
     phase: {
-
       illumination:
         illumination,
 
@@ -238,27 +215,20 @@ function getFallbackMoonData(year, month, day) {
 // ============================================================
 
 function getMoonImageNumber(phaseAngle) {
-
   let angle =
     phaseAngle % 360
 
   if (angle < 0) {
-
-    angle =
-      angle + 360
+    angle += 360
   }
 
   return Math.round(
-    angle / (360 / MOON_IMAGE_COUNT)
+    angle /
+    (360 / MOON_IMAGE_COUNT)
   ) % MOON_IMAGE_COUNT
 }
 
-// ============================================================
-// RUTA LUNA
-// ============================================================
-
 function getMoonImagePath(imageNumber) {
-
   return (
     'moon/moon_' +
     twoDigits(imageNumber) +
@@ -267,171 +237,11 @@ function getMoonImagePath(imageNumber) {
 }
 
 // ============================================================
-// IDIOMA
-// ============================================================
-
-function isSpanish() {
-
-  const language =
-    getLanguage()
-
-  return language === 3
-}
-
-// ============================================================
-// DÍA DE LA SEMANA
-// ============================================================
-
-function getWeekDayName(dayIndex) {
-
-  const english = [
-
-    'SUN',
-    'MON',
-    'TUE',
-    'WED',
-    'THU',
-    'FRI',
-    'SAT'
-
-  ]
-
-  const spanish = [
-
-    'DOM',
-    'LUN',
-    'MAR',
-    'MIÉ',
-    'JUE',
-    'VIE',
-    'SÁB'
-
-  ]
-
-  if (isSpanish()) {
-
-    return spanish[dayIndex]
-
-  }
-
-  return english[dayIndex]
-}
-
-// ============================================================
-// ETIQUETAS
-// ============================================================
-
-function getLabels() {
-
-  if (isSpanish()) {
-
-    return {
-
-      heart:
-        'BPM',
-
-      steps:
-        'PASOS',
-
-      battery:
-        'BATERÍA'
-
-    }
-
-  }
-
-  return {
-
-    heart:
-      'BPM',
-
-    steps:
-      'STEPS',
-
-    battery:
-      'BATTERY'
-
-  }
-}
-
-// ============================================================
-// ETIQUETA DE FASE
-// ============================================================
-
-function getPhaseLabel(phaseName) {
-
-  const spanishLabels = {
-
-    'New Moon':
-      'NUEVA',
-
-    'Waxing Crescent':
-      'CRECIENTE',
-
-    'First Quarter':
-      '1/4  CRECIENTE',
-
-    'Waxing Gibbous':
-      'GIBOSA  + ',
-
-    'Full Moon':
-      'LUNA LLENA',
-
-    'Waning Gibbous':
-      'GIBOSA - ',
-
-    'Last Quarter':
-      '1/4  MENGUANTE',
-
-    'Waning Crescent':
-      'MENGUANTE'
-
-  }
-
-  const englishLabels = {
-
-    'New Moon':
-      'NEW',
-
-    'Waxing Crescent':
-      'CRESCENT',
-
-    'First Quarter':
-      '1/4 WAXING',
-
-    'Waxing Gibbous':
-      'GIBBOUS +',
-
-    'Full Moon':
-      'FULL MOON',
-
-    'Waning Gibbous':
-      'GIBBOUS -',
-
-    'Last Quarter':
-      '1/4 WANING',
-
-    'Waning Crescent':
-      'WANING'
-
-  }
-
-  const labels =
-    isSpanish()
-      ? spanishLabels
-      : englishLabels
-
-  return labels[phaseName] || phaseName
-}
-
-// ============================================================
-// NOMBRE DEL ASSET DE FASE
+// NOMBRE DE FASE
 // ============================================================
 
 function getPhaseAssetName(phaseName) {
-
   const phaseNames = {
-
     'New Moon':
       'NEW_MOON',
 
@@ -455,14 +265,52 @@ function getPhaseAssetName(phaseName) {
 
     'Waning Crescent':
       'WANING_CRESCENT'
-
   }
 
   return (
-    isSpanish() ? 'ES_' : 'EN_'
-  ) + (
-    phaseNames[phaseName] || 'NEW_MOON'
+    phaseNames[phaseName] ||
+    'NEW_MOON'
   )
+}
+
+// ============================================================
+// IDIOMA
+// ============================================================
+
+function isSpanish() {
+  return getLanguage() === 3
+}
+
+// ============================================================
+// DÍA DE LA SEMANA
+// ============================================================
+
+function getWeekDayName(dayIndex) {
+  const english = [
+    'SUN',
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT'
+  ]
+
+  const spanish = [
+    'DOM',
+    'LUN',
+    'MAR',
+    'MIÉ',
+    'JUE',
+    'VIE',
+    'SÁB'
+  ]
+
+  if (isSpanish()) {
+    return spanish[dayIndex]
+  }
+
+  return english[dayIndex]
 }
 
 // ============================================================
@@ -470,9 +318,7 @@ function getPhaseAssetName(phaseName) {
 // ============================================================
 
 function createBoldText(options) {
-
   const {
-
     x,
     y,
     w,
@@ -481,7 +327,6 @@ function createBoldText(options) {
     textSize,
     color,
     align
-
   } = options
 
   hmUI.createWidget(
@@ -489,22 +334,12 @@ function createBoldText(options) {
     {
       x: x - 1,
       y: y,
-
       w: w,
       h: h,
-
-      text:
-        text,
-
-      text_size:
-        textSize,
-
-      color:
-        color,
-
-      align_h:
-        align,
-
+      text: text,
+      text_size: textSize,
+      color: color,
+      align_h: align,
       align_v:
         hmUI.align.CENTER_V
     }
@@ -515,22 +350,12 @@ function createBoldText(options) {
     {
       x: x + 1,
       y: y,
-
       w: w,
       h: h,
-
-      text:
-        text,
-
-      text_size:
-        textSize,
-
-      color:
-        color,
-
-      align_h:
-        align,
-
+      text: text,
+      text_size: textSize,
+      color: color,
+      align_h: align,
       align_v:
         hmUI.align.CENTER_V
     }
@@ -541,98 +366,39 @@ function createBoldText(options) {
     {
       x: x,
       y: y - 1,
-
       w: w,
       h: h,
-
-      text:
-        text,
-
-      text_size:
-        textSize,
-
-      color:
-        color,
-
-      align_h:
-        align,
-
+      text: text,
+      text_size: textSize,
+      color: color,
+      align_h: align,
       align_v:
         hmUI.align.CENTER_V
     }
   )
 
-  const core =
-    hmUI.createWidget(
-      hmUI.widget.TEXT,
-      {
-        x: x,
-        y: y,
-
-        w: w,
-        h: h,
-
-        text:
-          text,
-
-        text_size:
-          textSize,
-
-        color:
-          color,
-
-        align_h:
-          align,
-
-        align_v:
-          hmUI.align.CENTER_V
-      }
-    )
-
-  return core
+  return hmUI.createWidget(
+    hmUI.widget.TEXT,
+    {
+      x: x,
+      y: y,
+      w: w,
+      h: h,
+      text: text,
+      text_size: textSize,
+      color: color,
+      align_h: align,
+      align_v:
+        hmUI.align.CENTER_V
+    }
+  )
 }
 
 // ============================================================
-// TEXTO DORADO
-// ============================================================
-
-function createGoldText(options) {
-
-  return createBoldText({
-
-    x:
-      options.x,
-
-    y:
-      options.y,
-
-    w:
-      options.w,
-
-    h:
-      options.h,
-
-    text:
-      options.text,
-
-    textSize:
-      options.textSize,
-
-    color:
-      GOLD,
-
-    align:
-      options.align
-
-  })
-}
-
-// ============================================================
-// NÚMEROS DE SENSORES
+// SENSOR
 // ============================================================
 
 const SENSOR_NUMBER_IMAGES = [
-
   'numbers/0.png',
   'numbers/1.png',
   'numbers/2.png',
@@ -643,269 +409,44 @@ const SENSOR_NUMBER_IMAGES = [
   'numbers/7.png',
   'numbers/8.png',
   'numbers/9.png'
-
 ]
 
 const SENSOR_LIMITS = {
-
-  heart:
-    999,
-
-  steps:
-    99999,
-
-  battery:
-    100
-
+  heart: 999,
+  steps: 99999,
+  battery: 100
 }
-
-// ============================================================
-// ICONOS DE CLIMA
-// ============================================================
-
-const WEATHER_ICON_NAME =
-  'weather_'
-
-const WEATHER_ICON_BY_INDEX = {
-
-  0:
-    'cloud',
-
-  1:
-    'cloud_rain',
-
-  2:
-    'cloud_rain',
-
-  3:
-    'sun',
-
-  4:
-    'cloud',
-
-  5:
-    'cloud_rain',
-
-  6:
-    'cloud_rain',
-
-  7:
-    'cloud_rain',
-
-  8:
-    'cloud_rain',
-
-  9:
-    'cloud_rain',
-
-  10:
-    'cloud_rain',
-
-  11:
-    'cloud',
-
-  12:
-    'cloud_rain',
-
-  13:
-    'cloud',
-
-  14:
-    'cloud',
-
-  15:
-    'cloud_lightning',
-
-  16:
-    'cloud_rain',
-
-  17:
-    'cloud',
-
-  18:
-    'cloud_rain',
-
-  19:
-    'cloud_lightning',
-
-  20:
-    'cloud_lightning',
-
-  21:
-    'cloud_rain',
-
-  22:
-    'cloud',
-
-  23:
-    'cloud',
-
-  24:
-    'cloud_rain',
-
-  25:
-    'cloud',
-
-  26:
-    'cloud',
-
-  27:
-    'cloud_rain',
-
-  28:
-    'sun'
-
-}
-
-function getWeatherIconSrc(index) {
-
-  const name =
-    WEATHER_ICON_BY_INDEX[index] ||
-    'cloud'
-
-  return (
-    'icons/' +
-    WEATHER_ICON_NAME +
-    name +
-    '.png'
-  )
-}
-
-// ============================================================
-// TEMPERATURA
-// ============================================================
-
-function celsiusToDisplayTemperature(celsius) {
-
-  return Math.round(celsius)
-}
-
-// ============================================================
-// SLOTS DE TEMPERATURA
-// ============================================================
-
-function getTemperatureSlots(value) {
-
-  const text =
-    '' + value
-
-  if (text.length >= 3) {
-
-    return [
-
-      text[text.length - 3],
-      text[text.length - 2],
-      text[text.length - 1]
-
-    ]
-  }
-
-  if (text.length === 1) {
-
-    return [
-
-      ' ',
-      ' ',
-      text
-
-    ]
-  }
-
-  return [
-
-    ' ',
-    text[0],
-    text[1]
-
-  ]
-}
-
-// ============================================================
-// ASSET DE CADA CARÁCTER DE TEMPERATURA
-// ============================================================
-
-function getTemperatureCharSrc(character) {
-
-  if (character === '-') {
-
-    return 'letters/MINUS.png'
-  }
-
-  if (character === ' ') {
-
-    return 'numbers/null.png'
-  }
-
-  return (
-    'numbers/' +
-    character +
-    '.png'
-  )
-}
-
-// ============================================================
-// SENSOR TEXT
-// ============================================================
 
 function createSensorText(options) {
-
   return hmUI.createWidget(
     hmUI.widget.TEXT_IMG,
     {
-      x:
-        options.x,
-
-      y:
-        options.y,
-
-      w:
-        options.w,
-
-      h:
-        options.h,
-
-      type:
-        options.type,
-
+      x: options.x,
+      y: options.y,
+      w: options.w,
+      h: options.h,
+      type: options.type,
       font_array:
         SENSOR_NUMBER_IMAGES,
-
-      h_space:
-        0,
-
+      h_space: 0,
       align_h:
         hmUI.align.CENTER_H,
-
       invalid_image:
         'numbers/null.png',
-
       max_value:
         options.maxValue
     }
   )
 }
 
-// ============================================================
-// ICONO DE SENSOR
-// ============================================================
-
 function createSensorIcon(options) {
-
   return hmUI.createWidget(
     hmUI.widget.IMG,
     {
-      x:
-        options.x,
-
-      y:
-        options.y,
-
-      w:
-        36,
-
-      h:
-        28,
-
+      x: options.x,
+      y: options.y,
+      w: 36,
+      h: 28,
       src:
         'icons/' +
         options.name +
@@ -915,26 +456,49 @@ function createSensorIcon(options) {
 }
 
 // ============================================================
-// DÍGITO DIGITAL
+// TEXTO DE IMÁGENES
 // ============================================================
 
-function createDigitalDigit(options) {
+function normalizeImageText(text) {
+  return text
+    .replace(/[ÁÀÂÄ]/g, 'A')
+    .replace(/[ÉÈÊË]/g, 'E')
+    .replace(/[ÍÌÎÏ]/g, 'I')
+    .replace(/[ÓÒÔÖ]/g, 'O')
+    .replace(/[ÚÙÛÜ]/g, 'U')
+}
 
+function getLetterAssetName(character) {
+  const symbolNames = {
+    '/': 'SLASH',
+    '%': 'PERCENT',
+    '+': 'PLUS',
+    '-': 'MINUS'
+  }
+
+  return (
+    symbolNames[character] ||
+    character
+  )
+}
+
+function getTextAssetPath(character) {
+  return (
+    /[0-9]/.test(character) ||
+    character === '/'
+  )
+    ? 'numbers/'
+    : 'letters/'
+}
+
+function createDigitalDigit(options) {
   return hmUI.createWidget(
     hmUI.widget.IMG,
     {
-      x:
-        options.x,
-
-      y:
-        options.y,
-
-      w:
-        options.w,
-
-      h:
-        options.h,
-
+      x: options.x,
+      y: options.y,
+      w: options.w,
+      h: options.h,
       src:
         options.path +
         '/' +
@@ -944,66 +508,7 @@ function createDigitalDigit(options) {
   )
 }
 
-// ============================================================
-// NORMALIZAR TEXTO
-// ============================================================
-
-function normalizeImageText(text) {
-
-  return text
-    .replace(/[ÁÀÂÄ]/g, 'A')
-    .replace(/[ÉÈÊË]/g, 'E')
-    .replace(/[ÍÌÎÏ]/g, 'I')
-    .replace(/[ÓÒÔÖ]/g, 'O')
-    .replace(/[ÚÙÛÜ]/g, 'U')
-}
-
-// ============================================================
-// NOMBRE DEL ASSET DE LETRA
-// ============================================================
-
-function getLetterAssetName(character) {
-
-  const symbolNames = {
-
-    '/':
-      'SLASH',
-
-    '%':
-      'PERCENT',
-
-    '+':
-      'PLUS',
-
-    '-':
-      'MINUS'
-
-  }
-
-  return (
-    symbolNames[character] ||
-    character
-  )
-}
-
-// ============================================================
-// CARPETA DEL ASSET DE TEXTO
-// ============================================================
-
-function getTextAssetPath(character) {
-
-  return /[0-9]/.test(character) ||
-    character === '/'
-    ? 'numbers/'
-    : 'letters/'
-}
-
-// ============================================================
-// TEXTO CON IMÁGENES
-// ============================================================
-
 function createLetterText(options) {
-
   const text =
     normalizeImageText(
       options.text
@@ -1033,8 +538,16 @@ function createLetterText(options) {
 
   const availableWidth =
     options.w -
-    (spaceCount * spaceWidth) -
-    ((characters.length - 1) * spacing)
+    (
+      spaceCount *
+      spaceWidth
+    ) -
+    (
+      (
+        characters.length - 1
+      ) *
+      spacing
+    )
 
   const letterWidth =
     Math.min(
@@ -1047,7 +560,9 @@ function createLetterText(options) {
 
   const letterHeight =
     Math.floor(
-      letterWidth * 30 / 22
+      letterWidth *
+      30 /
+      22
     )
 
   let textWidth = 0
@@ -1057,7 +572,6 @@ function createLetterText(options) {
     i < characters.length;
     i++
   ) {
-
     textWidth +=
       characters[i] === ' '
         ? spaceWidth
@@ -1067,7 +581,6 @@ function createLetterText(options) {
       i <
       characters.length - 1
     ) {
-
       textWidth +=
         spacing
     }
@@ -1079,16 +592,21 @@ function createLetterText(options) {
   const y =
     options.y +
     Math.floor(
-      (options.h - letterHeight) / 2
+      (
+        options.h -
+        letterHeight
+      ) / 2
     )
 
   if (
     options.align ===
     hmUI.align.CENTER_H
   ) {
-
     x +=
-      (options.w - textWidth) / 2
+      (
+        options.w -
+        textWidth
+      ) / 2
   }
 
   const widgets = []
@@ -1098,42 +616,38 @@ function createLetterText(options) {
     i < characters.length;
     i++
   ) {
-
     const character =
       characters[i]
 
     if (
       character !== ' '
     ) {
-
       const widget =
         hmUI.createWidget(
           hmUI.widget.IMG,
           {
-            x:
-              x,
-
-            y:
-              y,
-
-            w:
-              letterWidth,
-
-            h:
-              letterHeight,
-
+            x: x,
+            y: y,
+            w: letterWidth,
+            h: letterHeight,
             src:
               (
                 assetFolder
                   ? assetFolder + '/'
-                  : getTextAssetPath(character)
+                  : getTextAssetPath(
+                      character
+                    )
               ) +
-              getLetterAssetName(character) +
+              getLetterAssetName(
+                character
+              ) +
               '.png'
           }
         )
 
-      widgets.push(widget)
+      widgets.push(
+        widget
+      )
     }
 
     x +=
@@ -1145,7 +659,6 @@ function createLetterText(options) {
       i <
       characters.length - 1
     ) {
-
       x +=
         spacing
     }
@@ -1155,103 +668,10 @@ function createLetterText(options) {
 }
 
 // ============================================================
-// IMAGEN DE FASE
-// ============================================================
-
-function createPhaseImage(options) {
-
-  return hmUI.createWidget(
-    hmUI.widget.IMG,
-    {
-      x:
-        options.x,
-
-      y:
-        options.y,
-
-      w:
-        options.w,
-
-      h:
-        options.h,
-
-      src:
-        'phase_labels/' +
-        options.name +
-        '.png'
-    }
-  )
-}
-
-// ============================================================
-// TEXTO NEON
-// ============================================================
-
-function createNeonText(options) {
-
-  createBoldText({
-
-    x:
-      options.x + 2,
-
-    y:
-      options.y + 2,
-
-    w:
-      options.w,
-
-    h:
-      options.h,
-
-    text:
-      options.text,
-
-    textSize:
-      options.textSize,
-
-    color:
-      DARK_CYAN,
-
-    align:
-      options.align
-
-  })
-
-  return createBoldText({
-
-    x:
-      options.x,
-
-    y:
-      options.y,
-
-    w:
-      options.w,
-
-    h:
-      options.h,
-
-    text:
-      options.text,
-
-    textSize:
-      options.textSize,
-
-    color:
-      NEON_CYAN,
-
-    align:
-      options.align
-
-  })
-}
-
-// ============================================================
-// CREAR ESTRELLAS
+// ESTRELLAS
 // ============================================================
 
 function createStars() {
-
   const stars = []
 
   for (
@@ -1259,7 +679,6 @@ function createStars() {
     i < starDefinitions.length;
     i++
   ) {
-
     const star =
       starDefinitions[i]
 
@@ -1267,55 +686,32 @@ function createStars() {
       hmUI.createWidget(
         hmUI.widget.CIRCLE,
         {
-
-          center_x:
-            star.x,
-
-          center_y:
-            star.y,
-
-          radius:
-            star.r,
-
-          color:
-            WHITE,
-
-          alpha:
-            star.alpha
+          center_x: star.x,
+          center_y: star.y,
+          radius: star.r,
+          color: WHITE,
+          alpha: star.alpha
         }
       )
 
     stars.push({
-
-      widget:
-        widget,
-
-      baseAlpha:
-        star.alpha
-
+      widget: widget,
+      baseAlpha: star.alpha
     })
   }
 
   return stars
 }
 
-// ============================================================
-// ACTUALIZAR ESTRELLAS
-// ============================================================
-
 function updateStars(stars) {
-
   for (
     let i = 0;
     i < stars.length;
     i++
   ) {
-
     if (
-      Math.random() >=
-      0.35
+      Math.random() >= 0.35
     ) {
-
       continue
     }
 
@@ -1324,34 +720,19 @@ function updateStars(stars) {
 
     let alpha
 
-    if (
-      random < 0.20
-    ) {
-
-      alpha =
-        0
-
-    } else if (
-      random < 0.55
-    ) {
-
+    if (random < 0.20) {
+      alpha = 0
+    } else if (random < 0.55) {
       alpha =
         Math.floor(
           stars[i].baseAlpha *
           0.30
         )
-
-    } else if (
-      random < 0.80
-    ) {
-
+    } else if (random < 0.80) {
       alpha =
         stars[i].baseAlpha
-
     } else {
-
-      alpha =
-        255
+      alpha = 255
     }
 
     stars[i].widget.setProperty(
@@ -1362,31 +743,120 @@ function updateStars(stars) {
 }
 
 // ============================================================
+// CLIMA
+// ============================================================
+
+const WEATHER_ICON_NAME =
+  'weather_'
+
+const WEATHER_ICON_BY_INDEX = {
+  0: 'cloud',
+  1: 'cloud_rain',
+  2: 'cloud_rain',
+  3: 'sun',
+  4: 'cloud',
+  5: 'cloud_rain',
+  6: 'cloud_rain',
+  7: 'cloud_rain',
+  8: 'cloud_rain',
+  9: 'cloud_rain',
+  10: 'cloud_rain',
+  11: 'cloud',
+  12: 'cloud_rain',
+  13: 'cloud',
+  14: 'cloud',
+  15: 'cloud_lightning',
+  16: 'cloud_rain',
+  17: 'cloud',
+  18: 'cloud_rain',
+  19: 'cloud_lightning',
+  20: 'cloud_lightning',
+  21: 'cloud_rain',
+  22: 'cloud',
+  23: 'cloud',
+  24: 'cloud_rain',
+  25: 'cloud',
+  26: 'cloud',
+  27: 'cloud_rain',
+  28: 'sun'
+}
+
+function getWeatherIconSrc(index) {
+  const name =
+    WEATHER_ICON_BY_INDEX[index] ||
+    'cloud'
+
+  return (
+    'icons/' +
+    WEATHER_ICON_NAME +
+    name +
+    '.png'
+  )
+}
+
+function celsiusToDisplayTemperature(
+  celsius
+) {
+  return Math.round(celsius)
+}
+
+function getTemperatureSlots(value) {
+  const text =
+    '' + value
+
+  if (text.length >= 3) {
+    return [
+      text[text.length - 3],
+      text[text.length - 2],
+      text[text.length - 1]
+    ]
+  }
+
+  if (text.length === 1) {
+    return [
+      ' ',
+      ' ',
+      text
+    ]
+  }
+
+  return [
+    ' ',
+    text[0],
+    text[1]
+  ]
+}
+
+function getTemperatureCharSrc(
+  character
+) {
+  if (character === '-') {
+    return 'letters/MINUS.png'
+  }
+
+  if (character === ' ') {
+    return 'numbers/null.png'
+  }
+
+  return (
+    'numbers/' +
+    character +
+    '.png'
+  )
+}
+
+// ============================================================
 // WATCHFACE
 // ============================================================
 
 WatchFace({
 
-  // ==========================================================
-  // VARIABLES
-  // ==========================================================
-
   starWidgets: [],
   starTimer: null,
 
-  clockWidgets: [],
-  displayedClock: '',
   lastDateKey: '',
 
-  sensorTimer: null,
   weatherTimer: null,
-
-  // SENSOR DE TIEMPO
-
-  timeSensor: null,
-  timeFallbackTimer: null,
-  timeMinuteCallback: null,
-  timeDayCallback: null,
 
   heartRateSensor: null,
   stepSensor: null,
@@ -1400,13 +870,9 @@ WatchFace({
   stepValueWidget: null,
   batteryValueWidget: null,
 
-  // FECHA
-
   dateDayWidgets: [],
   dateMonthWidgets: [],
   weekDayWidgets: [],
-
-  // LUNA
 
   moonImageWidget: null,
   illuminationDigitWidgets: [],
@@ -1419,157 +885,48 @@ WatchFace({
   // ==========================================================
 
   onInit() {
-
     console.log(
       'SaganMoon: iniciando watchface'
     )
-
-    // ========================================================
-    // ========================================================
-
-    try {
-
-      if (
-        typeof hmSensor !== 'undefined' &&
-        hmSensor.id &&
-        hmSensor.id.TIME !== undefined
-      ) {
-
-        this.timeSensor =
-          hmSensor.createSensor(
-            hmSensor.id.TIME
-          )
-
-        console.log(
-          'SaganMoon: sensor TIME API 2.0 creado'
-        )
-
-      } else {
-
-        this.timeSensor =
-          null
-
-        console.log(
-          'SaganMoon: hmSensor TIME no disponible; usando Date'
-        )
-      }
-
-    } catch (error) {
-
-      this.timeSensor =
-        null
-
-      console.log(
-        'SaganMoon: ERROR creando TIME = ' +
-        error
-      )
-    }
 
     if (
       typeof hmSensor !==
       'undefined'
     ) {
-
-      this.heartRateSensor =
-        hmSensor.createSensor(
-          hmSensor.id.HEART
-        )
-
-      this.stepSensor =
-        hmSensor.createSensor(
-          hmSensor.id.STEP
-        )
-
-      this.batterySensor =
-        hmSensor.createSensor(
-          hmSensor.id.BATTERY
-        )
-
-      this.weatherSensor =
-        hmSensor.createSensor(
-          hmSensor.id.WEATHER
-        )
-
-    } else {
-
-      console.log(
-        'SaganMoon: hmSensor no disponible'
-      )
-    }
-  },
-
-  // ==========================================================
-  // OBTENER FECHA/HORA ACTUAL
-  // ==========================================================
-
-  getCurrentDateInfo() {
-
-    if (
-      this.timeSensor !== null
-    ) {
-
       try {
+        this.heartRateSensor =
+          hmSensor.createSensor(
+            hmSensor.id.HEART
+          )
 
-        return {
+        this.stepSensor =
+          hmSensor.createSensor(
+            hmSensor.id.STEP
+          )
 
-          year:
-            this.timeSensor.year,
+        this.batterySensor =
+          hmSensor.createSensor(
+            hmSensor.id.BATTERY
+          )
 
-          month:
-            this.timeSensor.month,
-
-          day:
-            this.timeSensor.day,
-
-          hour:
-            this.timeSensor.hour,
-
-          minute:
-            this.timeSensor.minute,
-
-          second:
-            this.timeSensor.second,
-
-          weekDay:
-            this.timeSensor.week % 7
-
-        }
-
-      } catch (error) {
+        this.weatherSensor =
+          hmSensor.createSensor(
+            hmSensor.id.WEATHER
+          )
 
         console.log(
-          'SaganMoon: ERROR leyendo Time = ' +
+          'SaganMoon: sensores creados'
+        )
+      } catch (error) {
+        console.log(
+          'SaganMoon: ERROR creando sensores = ' +
           error
         )
       }
-    }
-
-    const date =
-      new Date()
-
-    return {
-
-      year:
-        date.getFullYear(),
-
-      month:
-        date.getMonth() + 1,
-
-      day:
-        date.getDate(),
-
-      hour:
-        date.getHours(),
-
-      minute:
-        date.getMinutes(),
-
-      second:
-        date.getSeconds(),
-
-      weekDay:
-        date.getDay()
-
+    } else {
+      console.log(
+        'SaganMoon: hmSensor no disponible'
+      )
     }
   },
 
@@ -1578,31 +935,18 @@ WatchFace({
   // ==========================================================
 
   build() {
-
     console.log(
-      'SaganMoon: construyendo SaganMoon'
+      'SaganMoon: construyendo SaganMoon 1.7'
     )
-
-    // ========================================================
-    // ========================================================
 
     hmUI.createWidget(
       hmUI.widget.FILL_RECT,
       {
-        x:
-          0,
-
-        y:
-          0,
-
-        w:
-          SCREEN_WIDTH,
-
-        h:
-          SCREEN_HEIGHT,
-
-        color:
-          BLACK
+        x: 0,
+        y: 0,
+        w: SCREEN_WIDTH,
+        h: SCREEN_HEIGHT,
+        color: BLACK
       }
     )
 
@@ -1614,186 +958,41 @@ WatchFace({
       createStars()
 
     // ========================================================
-    // HORA
+    // RELOJ
     // ========================================================
 
     const dateInfo =
-      this.getCurrentDateInfo()
+      createClock()
 
-    const year =
-      dateInfo.year
+    startClock(
+      dateInfo => {
+        const currentDateKey =
+          dateInfo.year +
+          '-' +
+          twoDigits(
+            dateInfo.month
+          ) +
+          '-' +
+          twoDigits(
+            dateInfo.day
+          )
 
-    const month =
-      dateInfo.month
+        if (
+          this.lastDateKey !==
+          currentDateKey
+        ) {
+          this.lastDateKey =
+            currentDateKey
 
-    const day =
-      dateInfo.day
-
-    const hour =
-      dateInfo.hour
-
-    const minute =
-      dateInfo.minute
-
-    const currentHour =
-      twoDigits(hour)
-
-    const currentMinute =
-      twoDigits(minute)
-
-    // ========================================================
-    // HORA PRINCIPAL
-    // ========================================================
-
-    this.clockWidgets = [
-
-      createDigitalDigit({
-
-        x:
-          28,
-
-        y:
-          50,
-
-        w:
-          68,
-
-        h:
-          92,
-
-        path:
-          'digits/clock',
-
-        digit:
-          currentHour[0]
-
-      }),
-
-      createDigitalDigit({
-
-        x:
-          96,
-
-        y:
-          50,
-
-        w:
-          68,
-
-        h:
-          92,
-
-        path:
-          'digits/clock',
-
-        digit:
-          currentHour[1]
-
-      }),
-
-      // ======================================================
-      // ======================================================
-
-      createDigitalDigit({
-
-        x:
-          28,
-
-        y:
-          170,
-
-        w:
-          68,
-
-        h:
-          92,
-
-        path:
-          'digits/clock',
-
-        digit:
-          currentMinute[0]
-
-      }),
-
-      createDigitalDigit({
-
-        x:
-          96,
-
-        y:
-          170,
-
-        w:
-          68,
-
-        h:
-          92,
-
-        path:
-          'digits/clock',
-
-        digit:
-          currentMinute[1]
-
-      })
-
-    ]
-
-    this.displayedClock =
-      currentHour +
-      currentMinute
-
-    // ========================================================
-    // ========================================================
-
-    if (
-      this.timeSensor !== null &&
-      typeof this.timeSensor.addEventListener ===
-      'function' &&
-      this.timeSensor.event
-    ) {
-
-      this.timeMinuteCallback =
-        () => {
-          this.updateClock()
-        }
-
-      this.timeDayCallback =
-        () => {
           this.updateDate()
           this.updateMoon()
         }
+      }
+    )
 
-      this.timeSensor.addEventListener(
-        this.timeSensor.event.MINUTEEND,
-        this.timeMinuteCallback
-      )
-
-      this.timeSensor.addEventListener(
-        this.timeSensor.event.DAYCHANGE,
-        this.timeDayCallback
-      )
-
-      console.log(
-        'SaganMoon: eventos TIME API 2.0 registrados'
-      )
-
-    } else {
-
-      this.timeFallbackTimer =
-        setInterval(
-          () => {
-            this.updateClock()
-            this.updateDate()
-          },
-          1000
-        )
-
-      console.log(
-        'SaganMoon: usando timer de respaldo para reloj'
-      )
-    }
+    console.log(
+      'SaganMoon: reloj modular iniciado'
+    )
 
     // ========================================================
     // LÍNEA DORADA
@@ -1802,20 +1001,11 @@ WatchFace({
     hmUI.createWidget(
       hmUI.widget.FILL_RECT,
       {
-        x:
-          15,
-
-        y:
-          330,
-
-        w:
-          402,
-
-        h:
-          2,
-
-        color:
-          GOLD
+        x: 15,
+        y: 330,
+        w: 402,
+        h: 2,
+        color: GOLD
       }
     )
 
@@ -1828,25 +1018,22 @@ WatchFace({
     this.lastDateKey =
       dateInfo.year +
       '-' +
-      twoDigits(dateInfo.month) +
+      twoDigits(
+        dateInfo.month
+      ) +
       '-' +
-      twoDigits(dateInfo.day)
+      twoDigits(
+        dateInfo.day
+      )
 
     // ========================================================
-    // DATOS LUNARES
+    // LUNA
     // ========================================================
 
     this.createMoonWidgets()
 
     // ========================================================
-    // ETIQUETAS
-    // ========================================================
-
-    const labels =
-      getLabels()
-
-    // ========================================================
-    // POSICIÓN DE INDICADORES
+    // POSICIÓN INDICADORES
     // ========================================================
 
     const valueY =
@@ -1861,38 +1048,20 @@ WatchFace({
 
     this.heartValueWidget =
       createSensorText({
-
-        x:
-          46,
-
-        y:
-          valueY,
-
-        w:
-          90,
-
-        h:
-          42,
-
+        x: 46,
+        y: valueY,
+        w: 90,
+        h: 42,
         type:
           hmUI.data_type.HEART,
-
         maxValue:
           SENSOR_LIMITS.heart
-
       })
 
     createSensorIcon({
-
-      x:
-        73,
-
-      y:
-        labelY,
-
-      name:
-        'heart'
-
+      x: 73,
+      y: labelY,
+      name: 'heart'
     })
 
     // ========================================================
@@ -1901,38 +1070,20 @@ WatchFace({
 
     this.stepValueWidget =
       createSensorText({
-
-        x:
-          136,
-
-        y:
-          valueY,
-
-        w:
-          160,
-
-        h:
-          42,
-
+        x: 136,
+        y: valueY,
+        w: 160,
+        h: 42,
         type:
           hmUI.data_type.STEP,
-
         maxValue:
           SENSOR_LIMITS.steps
-
       })
 
     createSensorIcon({
-
-      x:
-        198,
-
-      y:
-        labelY,
-
-      name:
-        'steps'
-
+      x: 198,
+      y: labelY,
+      name: 'steps'
     })
 
     // ========================================================
@@ -1941,38 +1092,20 @@ WatchFace({
 
     this.batteryValueWidget =
       createSensorText({
-
-        x:
-          296,
-
-        y:
-          valueY,
-
-        w:
-          90,
-
-        h:
-          42,
-
+        x: 296,
+        y: valueY,
+        w: 90,
+        h: 42,
         type:
           hmUI.data_type.BATTERY,
-
         maxValue:
           SENSOR_LIMITS.battery
-
       })
 
     createSensorIcon({
-
-      x:
-        323,
-
-      y:
-        labelY,
-
-      name:
-        'battery'
-
+      x: 323,
+      y: labelY,
+      name: 'battery'
     })
 
     // ========================================================
@@ -1983,22 +1116,12 @@ WatchFace({
       hmUI.createWidget(
         hmUI.widget.IMG,
         {
-
-          x:
-            340,
-
-          y:
-            438,
-
-          w:
-            72,
-
-          h:
-            56,
-
+          x: 340,
+          y: 438,
+          w: 72,
+          h: 56,
           src:
             getWeatherIconSrc(3)
-
         }
       )
 
@@ -2010,22 +1133,13 @@ WatchFace({
       448
 
     this.temperatureDigitWidgets = [
-
       hmUI.createWidget(
         hmUI.widget.IMG,
         {
-          x:
-            220,
-
-          y:
-            temperatureY,
-
-          w:
-            22,
-
-          h:
-            30,
-
+          x: 220,
+          y: temperatureY,
+          w: 22,
+          h: 30,
           src:
             'numbers/null.png'
         }
@@ -2034,18 +1148,10 @@ WatchFace({
       hmUI.createWidget(
         hmUI.widget.IMG,
         {
-          x:
-            244,
-
-          y:
-            temperatureY,
-
-          w:
-            22,
-
-          h:
-            30,
-
+          x: 244,
+          y: temperatureY,
+          w: 22,
+          h: 30,
           src:
             'numbers/null.png'
         }
@@ -2054,61 +1160,37 @@ WatchFace({
       hmUI.createWidget(
         hmUI.widget.IMG,
         {
-          x:
-            268,
-
-          y:
-            temperatureY,
-
-          w:
-            22,
-
-          h:
-            30,
-
+          x: 268,
+          y: temperatureY,
+          w: 22,
+          h: 30,
           src:
             'numbers/null.png'
         }
       )
-
     ]
 
     // ========================================================
-    // SÍMBOLO DE GRADOS
+    // GRADOS
     // ========================================================
 
     hmUI.createWidget(
       hmUI.widget.IMG,
       {
-
-        x:
-          292,
-
-        y:
-          temperatureY,
-
-        w:
-          22,
-
-        h:
-          30,
-
+        x: 292,
+        y: temperatureY,
+        w: 22,
+        h: 30,
         src:
           'numbers/degree.png'
-
       }
     )
 
     // ========================================================
-    // ACTUALIZAR CLIMA INMEDIATAMENTE
+    // ACTUALIZACIONES INICIALES
     // ========================================================
 
     this.updateWeather()
-
-    // ========================================================
-    // ACTUALIZAR SENSORES
-    // ========================================================
-
     this.updateSensorValues()
 
     // ========================================================
@@ -2118,17 +1200,15 @@ WatchFace({
     this.starTimer =
       setInterval(
         () => {
-
           updateStars(
             this.starWidgets
           )
-
         },
         2500
       )
 
     // ========================================================
-    // INFORMACIÓN DE IDIOMA
+    // IDIOMA
     // ========================================================
 
     console.log(
@@ -2153,13 +1233,12 @@ WatchFace({
   },
 
   // ==========================================================
-  // CREAR FECHA
+  // FECHA
   // ==========================================================
 
   createDateWidgets() {
-
     const dateInfo =
-      this.getCurrentDateInfo()
+      getCurrentDateInfo()
 
     const dateDay =
       twoDigits(
@@ -2176,181 +1255,77 @@ WatchFace({
         dateInfo.weekDay
       )
 
-    // ========================================================
-    // DÍA
-    // ========================================================
-
     this.dateDayWidgets = [
-
       createDigitalDigit({
-
-        x:
-          28,
-
-        y:
-          448,
-
-        w:
-          22,
-
-        h:
-          30,
-
-        path:
-          'numbers',
-
+        x: 28,
+        y: 448,
+        w: 22,
+        h: 30,
+        path: 'numbers',
         digit:
           dateDay[0]
-
       }),
 
       createDigitalDigit({
-
-        x:
-          52,
-
-        y:
-          448,
-
-        w:
-          22,
-
-        h:
-          30,
-
-        path:
-          'numbers',
-
+        x: 52,
+        y: 448,
+        w: 22,
+        h: 30,
+        path: 'numbers',
         digit:
           dateDay[1]
-
       })
-
     ]
 
-    // ========================================================
-    // SEPARADOR DÍA / MES
-    // ========================================================
-
     createDigitalDigit({
-
-      x:
-        76,
-
-      y:
-        448,
-
-      w:
-        12,
-
-      h:
-        30,
-
-      path:
-        'numbers',
-
-      digit:
-        'null'
-
+      x: 76,
+      y: 448,
+      w: 12,
+      h: 30,
+      path: 'numbers',
+      digit: 'null'
     })
 
-    // ========================================================
-    // MES
-    // ========================================================
-
     this.dateMonthWidgets = [
-
       createDigitalDigit({
-
-        x:
-          90,
-
-        y:
-          448,
-
-        w:
-          22,
-
-        h:
-          30,
-
-        path:
-          'numbers',
-
+        x: 90,
+        y: 448,
+        w: 22,
+        h: 30,
+        path: 'numbers',
         digit:
           dateMonth[0]
-
       }),
 
       createDigitalDigit({
-
-        x:
-          114,
-
-        y:
-          448,
-
-        w:
-          22,
-
-        h:
-          30,
-
-        path:
-          'numbers',
-
+        x: 114,
+        y: 448,
+        w: 22,
+        h: 30,
+        path: 'numbers',
         digit:
           dateMonth[1]
-
       })
-
     ]
-
-    // ========================================================
-    // DÍA DE LA SEMANA
-    // ========================================================
 
     this.weekDayWidgets =
       createLetterText({
-
-        x:
-          142,
-
-        y:
-          448,
-
-        w:
-          62,
-
-        h:
-          30,
-
-        text:
-          weekDay,
-
-        maxLetterWidth:
-          20,
-
-        spacing:
-          1,
-
-        spaceWidth:
-          6,
-
+        x: 142,
+        y: 448,
+        w: 62,
+        h: 30,
+        text: weekDay,
+        maxLetterWidth: 20,
+        spacing: 1,
+        spaceWidth: 6,
         align:
           hmUI.align.LEFT
-
       })
   },
 
-  // ==========================================================
-  // ACTUALIZAR FECHA
-  // ==========================================================
-
   updateDate() {
-
     const dateInfo =
-      this.getCurrentDateInfo()
+      getCurrentDateInfo()
 
     const dateDay =
       twoDigits(
@@ -2366,68 +1341,42 @@ WatchFace({
       getWeekDayName(
         dateInfo.weekDay
       )
-
-    // ========================================================
-    // DÍA
-    // ========================================================
 
     if (
       this.dateDayWidgets.length >= 2
     ) {
-
       this.dateDayWidgets[0].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'numbers/' +
-            dateDay[0] +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'numbers/' +
+        dateDay[0] +
+        '.png'
       )
 
       this.dateDayWidgets[1].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'numbers/' +
-            dateDay[1] +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'numbers/' +
+        dateDay[1] +
+        '.png'
       )
     }
-
-    // ========================================================
-    // MES
-    // ========================================================
 
     if (
       this.dateMonthWidgets.length >= 2
     ) {
-
       this.dateMonthWidgets[0].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'numbers/' +
-            dateMonth[0] +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'numbers/' +
+        dateMonth[0] +
+        '.png'
       )
 
       this.dateMonthWidgets[1].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'numbers/' +
-            dateMonth[1] +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'numbers/' +
+        dateMonth[1] +
+        '.png'
       )
     }
-
-    // ========================================================
-    // DÍA DE LA SEMANA
-    // ========================================================
 
     const normalizedWeekDay =
       normalizeImageText(
@@ -2442,11 +1391,9 @@ WatchFace({
       i < this.weekDayWidgets.length;
       i++
     ) {
-
       if (
         i >= characters.length
       ) {
-
         continue
       }
 
@@ -2454,13 +1401,12 @@ WatchFace({
         characters[i]
 
       this.weekDayWidgets[i].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'letters/' +
-            getLetterAssetName(character) +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'letters/' +
+        getLetterAssetName(
+          character
+        ) +
+        '.png'
       )
     }
 
@@ -2475,28 +1421,21 @@ WatchFace({
   },
 
   // ==========================================================
-  // CREAR ELEMENTOS LUNARES
+  // LUNA
   // ==========================================================
 
   createMoonWidgets() {
-
     const dateInfo =
-      this.getCurrentDateInfo()
+      getCurrentDateInfo()
 
-    const moonRecord =
+    let record =
       getMoonData(
         dateInfo.year,
         dateInfo.month,
         dateInfo.day
       )
 
-    let record =
-      moonRecord
-
-    if (
-      record === null
-    ) {
-
+    if (record === null) {
       record =
         getFallbackMoonData(
           dateInfo.year,
@@ -2531,11 +1470,6 @@ WatchFace({
         phaseAngle
       )
 
-    const moonImagePath =
-      getMoonImagePath(
-        moonImageNumber
-      )
-
     console.log(
       'SaganMoon: fecha lunar = ' +
       record.calendar_date
@@ -2566,10 +1500,6 @@ WatchFace({
       '.png'
     )
 
-    // ========================================================
-    // LUNA
-    // ========================================================
-
     const moonX =
       265
 
@@ -2583,30 +1513,22 @@ WatchFace({
       hmUI.createWidget(
         hmUI.widget.IMG,
         {
-
           x:
             moonX -
             moonSize / 2,
-
           y:
             moonY -
             moonSize / 2,
-
           w:
             moonSize,
-
           h:
             moonSize,
-
           src:
-            moonImagePath
-
+            getMoonImagePath(
+              moonImageNumber
+            )
         }
       )
-
-    // ========================================================
-    // ILUMINACIÓN
-    // ========================================================
 
     const illuminationText =
       '' +
@@ -2618,36 +1540,26 @@ WatchFace({
     const illuminationY =
       280
 
-    this.illuminationDigitWidgets = []
+    this.illuminationDigitWidgets =
+      []
 
     for (
       let i = 0;
       i < illuminationText.length;
       i++
     ) {
-
       const widget =
         createDigitalDigit({
-
           x:
             illuminationX +
             (i * 24),
-
           y:
             illuminationY,
-
-          w:
-            22,
-
-          h:
-            30,
-
-          path:
-            'numbers',
-
+          w: 22,
+          h: 30,
+          path: 'numbers',
           digit:
             illuminationText[i]
-
         })
 
       this.illuminationDigitWidgets.push(
@@ -2657,74 +1569,56 @@ WatchFace({
 
     const percentWidget =
       createDigitalDigit({
-
         x:
           illuminationX +
-          (illuminationText.length * 24),
-
+          (
+            illuminationText.length *
+            24
+          ),
         y:
           illuminationY,
-
-        w:
-          22,
-
-        h:
-          30,
-
-        path:
-          'letters',
-
-        digit:
-          'PERCENT'
-
+        w: 22,
+        h: 30,
+        path: 'letters',
+        digit: 'PERCENT'
       })
 
     this.illuminationDigitWidgets.push(
       percentWidget
     )
 
-    // ========================================================
-    // ETIQUETA DE FASE
-    // ========================================================
-
     this.phaseImageWidget =
-      createPhaseImage({
-
-        x:
-          84,
-
-        y:
-          281,
-
-        w:
-          195,
-
-        h:
-          32,
-
-        name:
-          getPhaseAssetName(
-            phaseName
-          )
-
-      })
+      hmUI.createWidget(
+        hmUI.widget.IMG,
+        {
+          x: 84,
+          y: 281,
+          w: 195,
+          h: 32,
+          src:
+            'phase_labels/' +
+            (
+              isSpanish()
+                ? 'ES_'
+                : 'EN_'
+            ) +
+            getPhaseAssetName(
+              phaseName
+            ) +
+            '.png'
+        }
+      )
   },
 
-  // ==========================================================
-  // ACTUALIZAR DATOS LUNARES
-  // ==========================================================
-
   updateMoon() {
-
     if (
       this.moonImageWidget === null
     ) {
-
       return
     }
 
     const dateInfo =
-      this.getCurrentDateInfo()
+      getCurrentDateInfo()
 
     let moonRecord =
       getMoonData(
@@ -2733,20 +1627,13 @@ WatchFace({
         dateInfo.day
       )
 
-    if (
-      moonRecord === null
-    ) {
-
+    if (moonRecord === null) {
       moonRecord =
         getFallbackMoonData(
           dateInfo.year,
           dateInfo.month,
           dateInfo.day
         )
-
-      console.log(
-        'SaganMoon: sin registro moonData; usando respaldo'
-      )
     }
 
     this.currentMoonRecord =
@@ -2766,28 +1653,17 @@ WatchFace({
         illumination * 100
       )
 
-    // ========================================================
-    // IMAGEN LUNAR
-    // ========================================================
-
     const moonImageNumber =
       getMoonImageNumber(
         phaseAngle
       )
 
     this.moonImageWidget.setProperty(
-      hmUI.prop.MORE,
-      {
-        src:
-          getMoonImagePath(
-            moonImageNumber
-          )
-      }
+      hmUI.prop.SRC,
+      getMoonImagePath(
+        moonImageNumber
+      )
     )
-
-    // ========================================================
-    // ILUMINACIÓN
-    // ========================================================
 
     const illuminationText =
       '' +
@@ -2795,61 +1671,51 @@ WatchFace({
 
     for (
       let i = 0;
-      i < this.illuminationDigitWidgets.length;
+      i <
+      this.illuminationDigitWidgets.length;
       i++
     ) {
-
       let src
 
       if (
         i < illuminationText.length
       ) {
-
         src =
           'numbers/' +
           illuminationText[i] +
           '.png'
-
       } else if (
         i === illuminationText.length
       ) {
-
         src =
           'letters/PERCENT.png'
-
       } else {
-
         src =
           'numbers/null.png'
       }
 
-      this.illuminationDigitWidgets[i].setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            src
-        }
-      )
+      this.illuminationDigitWidgets[i]
+        .setProperty(
+          hmUI.prop.SRC,
+          src
+        )
     }
-
-    // ========================================================
-    // ETIQUETA DE FASE
-    // ========================================================
 
     if (
       this.phaseImageWidget !== null
     ) {
-
       this.phaseImageWidget.setProperty(
-        hmUI.prop.MORE,
-        {
-          src:
-            'phase_labels/' +
-            getPhaseAssetName(
-              phaseName
-            ) +
-            '.png'
-        }
+        hmUI.prop.SRC,
+        'phase_labels/' +
+        (
+          isSpanish()
+            ? 'ES_'
+            : 'EN_'
+        ) +
+        getPhaseAssetName(
+          phaseName
+        ) +
+        '.png'
       )
     }
 
@@ -2868,84 +1734,18 @@ WatchFace({
   },
 
   // ==========================================================
-  // ACTUALIZAR RELOJ
-  // ==========================================================
-
-  updateClock() {
-
-    const dateInfo =
-      this.getCurrentDateInfo()
-
-    const currentClock =
-      twoDigits(
-        dateInfo.hour
-      ) +
-      twoDigits(
-        dateInfo.minute
-      )
-
-    if (
-      currentClock !==
-      this.displayedClock
-    ) {
-
-      this.displayedClock =
-        currentClock
-
-      for (
-        let i = 0;
-        i < this.clockWidgets.length;
-        i++
-      ) {
-
-        this.clockWidgets[i].setProperty(
-          hmUI.prop.MORE,
-          {
-            src:
-              'digits/clock/' +
-              currentClock[i] +
-              '.png'
-          }
-        )
-      }
-    }
-
-    const currentDateKey =
-      dateInfo.year +
-      '-' +
-      twoDigits(dateInfo.month) +
-      '-' +
-      twoDigits(dateInfo.day)
-
-    if (
-      this.lastDateKey !==
-      currentDateKey
-    ) {
-
-      this.lastDateKey =
-        currentDateKey
-
-      this.updateDate()
-      this.updateMoon()
-    }
-  },
-
-  // ==========================================================
-  // LEER FRECUENCIA CARDIACA
+  // SENSORES
   // ==========================================================
 
   readHeartRate() {
-
     if (
       this.heartRateSensor ===
       null
     ) {
-
       return '--'
     }
 
     try {
-
       const value =
         this.heartRateSensor.last
 
@@ -2955,9 +1755,7 @@ WatchFace({
       )
         ? value
         : '--'
-
     } catch (error) {
-
       console.log(
         'SaganMoon: ERROR FRECUENCIA = ' +
         error
@@ -2967,22 +1765,15 @@ WatchFace({
     }
   },
 
-  // ==========================================================
-  // LEER PASOS
-  // ==========================================================
-
   readSteps() {
-
     if (
       this.stepSensor ===
       null
     ) {
-
       return '--'
     }
 
     try {
-
       const value =
         this.stepSensor.current
 
@@ -2992,9 +1783,7 @@ WatchFace({
       )
         ? value
         : '--'
-
     } catch (error) {
-
       console.log(
         'SaganMoon: ERROR PASOS = ' +
         error
@@ -3004,22 +1793,15 @@ WatchFace({
     }
   },
 
-  // ==========================================================
-  // LEER BATERÍA
-  // ==========================================================
-
   readBattery() {
-
     if (
       this.batterySensor ===
       null
     ) {
-
       return '--'
     }
 
     try {
-
       const value =
         this.batterySensor.current
 
@@ -3029,9 +1811,7 @@ WatchFace({
       )
         ? value
         : '--'
-
     } catch (error) {
-
       console.log(
         'SaganMoon: ERROR BATERIA = ' +
         error
@@ -3041,112 +1821,7 @@ WatchFace({
     }
   },
 
-  // ==========================================================
-  // ACTUALIZAR CLIMA
-  // ==========================================================
-
-  updateWeather() {
-
-    if (
-      this.weatherSensor === null ||
-      this.weatherIconWidget === null
-    ) {
-
-      return
-    }
-
-    try {
-
-      // OBTENER PRONÓSTICO
-
-      const forecast =
-        this.weatherSensor
-          .getForecastWeather()
-
-      const today =
-        forecast
-          .forecastData
-          .data[0]
-
-      // ACTUALIZAR ICONO
-
-      this.weatherIconWidget.setProperty(
-
-        hmUI.prop.MORE,
-
-        {
-          src:
-            getWeatherIconSrc(
-              today.index
-            )
-        }
-
-      )
-
-      // OBTENER TEMPERATURA
-
-      const displayTemperature =
-        celsiusToDisplayTemperature(
-          today.high
-        )
-
-      // CREAR SLOTS
-
-      const slots =
-        getTemperatureSlots(
-          displayTemperature
-        )
-
-      // ACTUALIZAR LOS TRES DÍGITOS
-
-      for (
-        let i = 0;
-        i < this.temperatureDigitWidgets.length;
-        i++
-      ) {
-
-        const character =
-          slots[i] || ' '
-
-        this.temperatureDigitWidgets[i]
-          .setProperty(
-
-            hmUI.prop.MORE,
-
-            {
-              src:
-                getTemperatureCharSrc(
-                  character
-                )
-            }
-
-          )
-      }
-
-      // LOG
-
-      console.log(
-        'SaganMoon: clima -> index=' +
-        today.index +
-        ' temp=' +
-        displayTemperature
-      )
-
-    } catch (error) {
-
-      console.log(
-        'SaganMoon: ERROR CLIMA = ' +
-        error
-      )
-    }
-  },
-
-  // ==========================================================
-  // ACTUALIZAR VALORES DE SENSORES
-  // ==========================================================
-
   updateSensorValues() {
-
     const heartValue =
       this.readHeartRate()
 
@@ -3160,14 +1835,10 @@ WatchFace({
       this.heartValueWidget !==
       null
     ) {
-
       this.heartValueWidget.setProperty(
-
         hmUI.prop.TEXT,
-
         '' +
         heartValue
-
       )
     }
 
@@ -3175,14 +1846,10 @@ WatchFace({
       this.stepValueWidget !==
       null
     ) {
-
       this.stepValueWidget.setProperty(
-
         hmUI.prop.TEXT,
-
         '' +
         stepValue
-
       )
     }
 
@@ -3190,28 +1857,139 @@ WatchFace({
       this.batteryValueWidget !==
       null
     ) {
-
       this.batteryValueWidget.setProperty(
-
         hmUI.prop.TEXT,
-
         '' +
         batteryValue +
         '%'
-
       )
     }
 
     console.log(
-
       'SaganMoon: sensores -> HR=' +
       heartValue +
       ' STEP=' +
       stepValue +
       ' BAT=' +
       batteryValue
-
     )
+  },
+
+  // ==========================================================
+  // CLIMA
+  // ==========================================================
+
+updateWeather() {
+  console.log(
+    'SaganMoon: UPDATE WEATHER EJECUTADO'
+  )
+
+  console.log(
+    'SaganMoon: weatherSensor=' +
+    (this.weatherSensor === null ? 'NULL' : 'OK')
+  )
+
+  console.log(
+    'SaganMoon: weatherIconWidget=' +
+    (this.weatherIconWidget === null ? 'NULL' : 'OK')
+  )
+
+  if (
+    this.weatherSensor === null ||
+    this.weatherIconWidget === null
+  ) {
+    console.log(
+      'SaganMoon: clima detenido por widget/sensor NULL'
+    )
+    return
+  }
+
+  try {
+      const forecast =
+        this.weatherSensor
+          .getForecastWeather()
+
+      console.log(
+        'SaganMoon: forecast=' +
+        JSON.stringify(
+          forecast
+        )
+      )
+
+      if (
+        !forecast ||
+        !forecast.forecastData ||
+        !forecast.forecastData.data ||
+        !forecast.forecastData.data[0]
+      ) {
+        console.log(
+          'SaganMoon: sin datos de clima'
+        )
+
+        return
+      }
+
+      const today =
+        forecast
+          .forecastData
+          .data[0]
+
+      console.log(
+        'SaganMoon: clima raw index=' +
+        today.index +
+        ' high=' +
+        today.high +
+        ' low=' +
+        today.low
+      )
+
+      this.weatherIconWidget.setProperty(
+        hmUI.prop.SRC,
+        getWeatherIconSrc(
+          today.index
+        )
+      )
+
+      const displayTemperature =
+        celsiusToDisplayTemperature(
+          today.high
+        )
+
+      const slots =
+        getTemperatureSlots(
+          displayTemperature
+        )
+
+      for (
+        let i = 0;
+        i <
+        this.temperatureDigitWidgets.length;
+        i++
+      ) {
+        const character =
+          slots[i] || ' '
+
+        this.temperatureDigitWidgets[i]
+          .setProperty(
+            hmUI.prop.SRC,
+            getTemperatureCharSrc(
+              character
+            )
+          )
+      }
+
+      console.log(
+        'SaganMoon: clima -> index=' +
+        today.index +
+        ' temp=' +
+        displayTemperature
+      )
+    } catch (error) {
+      console.log(
+        'SaganMoon: ERROR CLIMA = ' +
+        error
+      )
+    }
   },
 
   // ==========================================================
@@ -3219,53 +1997,12 @@ WatchFace({
   // ==========================================================
 
   onDestroy() {
-
-    if (
-      this.timeSensor !== null &&
-      typeof this.timeSensor.removeEventListener ===
-      'function' &&
-      this.timeSensor.event
-    ) {
-
-      if (this.timeMinuteCallback !== null) {
-
-        this.timeSensor.removeEventListener(
-          this.timeSensor.event.MINUTEEND,
-          this.timeMinuteCallback
-        )
-      }
-
-      if (this.timeDayCallback !== null) {
-
-        this.timeSensor.removeEventListener(
-          this.timeSensor.event.DAYCHANGE,
-          this.timeDayCallback
-        )
-      }
-    }
-
-    // RESPALDO DEL RELOJ
-
-    if (
-      this.timeFallbackTimer !==
-      null
-    ) {
-
-      clearInterval(
-        this.timeFallbackTimer
-      )
-
-      this.timeFallbackTimer =
-        null
-    }
-
-    // ESTRELLAS
+    stopClock()
 
     if (
       this.starTimer !==
       null
     ) {
-
       clearInterval(
         this.starTimer
       )
@@ -3274,28 +2011,10 @@ WatchFace({
         null
     }
 
-    // SENSORES
-
-    if (
-      this.sensorTimer !==
-      null
-    ) {
-
-      clearInterval(
-        this.sensorTimer
-      )
-
-      this.sensorTimer =
-        null
-    }
-
-    // CLIMA
-
     if (
       this.weatherTimer !==
       null
     ) {
-
       clearInterval(
         this.weatherTimer
       )
@@ -3308,5 +2027,6 @@ WatchFace({
       'SaganMoon: cerrando watchface y liberando timers'
     )
   }
-
 })
+
+
